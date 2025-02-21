@@ -68,6 +68,7 @@ void setup() {
   Serial.print("IP Address:"); // prints IP Address of Arduino to connect to with Processing
   Serial.println(ip);
   server.begin(); // Tells server to listen for incoming connections
+  server2.begin();
   matrix.begin(); // initialises the led matrix
 }
 
