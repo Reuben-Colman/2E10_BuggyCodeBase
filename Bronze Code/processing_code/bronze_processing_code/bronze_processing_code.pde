@@ -25,7 +25,7 @@ textAlign(CENTER, CENTER); //  Horizontal and vertical alignment respectively
 
 
 int timeWhenObstacle;
-int timeSinceObstacle ;
+int timeSinceObstacle;
 
 void draw() {
   char dataIn = 'a';
