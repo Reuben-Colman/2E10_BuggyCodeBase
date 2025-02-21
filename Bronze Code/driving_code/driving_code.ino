@@ -20,6 +20,9 @@ char pass[] = "F9JPJMAADPDCXMHJ";  // Add WiFi password
 const int slowSpeed = 255;
 const int highSpeed = 120;
 
+double distance_on_foward = 1;
+double distance_traveled = 0;
+
 const int REYE = 13; // Right IR Sensor digital pin 
 const int LEYE = 12;  // Left IR Sensor digital pin
 
@@ -78,6 +81,8 @@ void loop() {
         server.write('o'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } else {
         Drive();
+        Serial.println("Distance Traveled: ");
+        Serial.println(distance_traveled);
       }
       keepDriving = true; // Buggy has been started
 
@@ -96,6 +101,8 @@ void loop() {
         server.write('o'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } else {
         Drive();
+        Serial.println("Distance Traveled: ");
+        Serial.println(distance_traveled);
       }
     } else {
       S();
