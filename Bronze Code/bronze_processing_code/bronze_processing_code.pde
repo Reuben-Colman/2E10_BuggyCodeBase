@@ -1,6 +1,7 @@
 import processing.net.*;
 
 Client myClient;
+Client myClient2;
 boolean isPowered = false;
 boolean obstacleDetected = false;
 SliderSwitch powerSwitch;
@@ -11,6 +12,7 @@ float distanceTraveled = 0.0;
 int timeWhenObstacle;
 int timeSinceObstacle;
 String input = "s";
+int distance = 0;
 
 void setup() {
   size(500, 700);
@@ -23,7 +25,8 @@ void setup() {
   
   // Initialize client (replace with your Arduino IP)
   myClient = new Client(this, "192.168.1.14", 5200  );
-  
+  myClient2 = new Client(this, "192.168.1.14", 5800  );
+
   // Initialize switch positions
   switchPosition = targetPosition = 20;
   powerSwitch = new SliderSwitch(width/2 - 60, height/2 - 25, 120, 50);
@@ -33,25 +36,30 @@ void draw() {
   background(255); // White background
   
   // Handle incoming data
-  if(myClient.available() > 0) {
-    input = myClient.readString();
-    if(input != null) {
+  while(myClient.available() > 0){
+    String input = myClient.readStringUntil('\n');
+    if (input != null){
       parseArduinoData(input);
     }
   }
   
+  while(myClient2.available() > 0){
+    distance = myClient2.readChar();
+  }
+  int distanceTraveled = int(distance); // Convert distance char to an integer
+   
   timeSinceObstacle = millis() - timeWhenObstacle;
   
   // Title
   fill(#333333);
   textAlign(CENTER, TOP);
-  textSize(28);
+  textSize(34);
   text("BUGGY CONTROLER", width/2, 25);
 
   // Distance display
   fill(#000000);
-  textSize(36);
-  text("Distance: " + nf(distanceTraveled, 0, 2) + " m", width/2, 200);
+  textSize(30);
+  text("Distance: " + nf(distanceTraveled) + " m", width/2, 200);
   
   // Animate switch
   switchPosition = lerp(switchPosition, targetPosition, 0.2);
@@ -63,34 +71,27 @@ void draw() {
 
 void parseArduinoData(String data) {
   String[] messages = split(data, '\n');
-  for(String msg : messages) {
+  for (String msg : messages) {
     msg = msg.trim();
-    if(msg.equals("O")) {
+    println("Raw message: " + msg);  // Debug line
+    
+    if (msg.equals("OBSTACLE")) {
       timeWhenObstacle = millis();
-    } 
-    else if(msg.startsWith("DIST:")) {
-      try {
-        distanceTraveled = Float.parseFloat(msg.substring(5));
-      } catch(NumberFormatException e) {
-        println("Error parsing distance: " + msg);
+      println("Obstacle detected!");
       }
     }
   }
-}
+
 
 void drawStatusMessages() {
-  String statusText = "Status: " + (isPowered ? "ACTIVE" : "STANDBY");
+  String statusText = "Status: " + (isPowered ? "DRIVING" : "STOPPED");
   color statusColor = #666666;
   
-  if(timeSinceObstacle < 3000) {
+  if(timeSinceObstacle < 500) {
     statusText = "Status: OBSTACLE DETECTED!";
     println("Obstacle dectected");
     statusColor = #FF0000;
   } 
-  else if(timeSinceObstacle > 3000 && timeSinceObstacle < 6000) {
-    statusText = "Status: OBSTACLE CLEARED";
-    statusColor = #00C851;
-  }
   
   textSize(18);
   fill(statusColor);
