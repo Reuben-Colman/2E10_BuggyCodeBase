@@ -15,8 +15,8 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
 		0x90108204
 };
 
-char ssid[] = "VODAFONE-0784"; // WiFi Name
-char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
+char ssid[] = "VODAFONE-5C78"; // WiFi Name
+char pass[] = "9F34MP2P2FJ4K3BD";  // WiFi password
 
 const int slowSpeed = 255; // speed while turning
 const int highSpeed = 120; // speed while going foward
@@ -79,11 +79,12 @@ void loop() {
 
       if (distance <= 10 || distance >= 2000) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
         Stop(); // stops the buggy
-        server.write('o'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
+        server.write('O'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } else {
         Drive(); // calls the drive function
         Serial.println("Distance Traveled: "); // prints the distance traveld by the buggy so far
         Serial.println(distance_traveled);
+        server.write('DIST: ' + distance_traveled);
       }
       keepDriving = true; // Buggy has been started
 
