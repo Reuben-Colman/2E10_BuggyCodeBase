@@ -22,7 +22,7 @@ void setup() {
   textFont(font);
   
   // Initialize client (replace with your Arduino IP)
-  myClient = new Client(this, "192.168.1.3", 80);
+  myClient = new Client(this, "192.168.1.14", 5200  );
   
   // Initialize switch positions
   switchPosition = targetPosition = 20;
@@ -65,7 +65,7 @@ void parseArduinoData(String data) {
   String[] messages = split(data, '\n');
   for(String msg : messages) {
     msg = msg.trim();
-    if(msg.equals("OBSTACLE")) {
+    if(msg.equals("O")) {
       timeWhenObstacle = millis();
     } 
     else if(msg.startsWith("DIST:")) {
@@ -84,6 +84,7 @@ void drawStatusMessages() {
   
   if(timeSinceObstacle < 3000) {
     statusText = "Status: OBSTACLE DETECTED!";
+    println("Obstacle dectected");
     statusColor = #FF0000;
   } 
   else if(timeSinceObstacle > 3000 && timeSinceObstacle < 6000) {
