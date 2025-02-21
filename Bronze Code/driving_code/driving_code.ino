@@ -38,11 +38,15 @@ const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 long duration; // Length of time for ultrasonic ping to return
 int distance; // Distance from buggy to obstacle
 bool keepDriving = false; // True if buggy receives instruction to start
+int lastDistanceUpdate;
 
 int LEYE_Status = digitalRead( LEYE ); // Current status of Left IR Sensor
 int REYE_Status = digitalRead( REYE ); // Current status of Right IR Sensor
 
 WiFiServer server(5200); // Creating Server object
+WiFiServer server2(5800);
+
+char j;
 
 void setup() {
   Serial.begin(9600);
@@ -76,18 +80,14 @@ void loop() {
     matrix.loadFrame(wifi_check); // loads check mark on led matrix to confirm wifi conncection
     char c = client.read(); // reads the imput from processing
     if (c == 'z'){ // If start signal received from client
-
       if (distance <= 10 || distance >= 2000) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
         Stop(); // stops the buggy
-        server.write('O'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
+        server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
+        //Serial.println("OBSTACLE");
       } else {
         Drive(); // calls the drive function
-        Serial.println("Distance Traveled: "); // prints the distance traveld by the buggy so far
-        Serial.println(distance_traveled);
-        server.write('DIST: ' + distance_traveled);
       }
       keepDriving = true; // Buggy has been started
-
     }
 
     if (c == 's'){ // If Stop signal received from client
@@ -100,15 +100,15 @@ void loop() {
      if (keepDriving == true){  // Keep driving if previously driving
       if (distance <= 10 || distance >= 2000) {
         Stop(); // stops the buggy
-        server.write('o'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
+        server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } else {
         Drive(); // calls the drive function
-        Serial.println("Distance Traveled: "); // prints the distance traveld by the buggy so far
-        Serial.println(distance_traveled);
       }
     } else {
       Stop();// stops the buggy
     }
     matrix.loadFrame(wifi_x); // displays x on the led matrix, as wifi is not currently connected
   }
+
+  processingDistance(distance_traveled);
 }
