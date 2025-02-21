@@ -41,7 +41,7 @@ void TurnLeft() {
   analogWrite( LM2, 0);
 }
 
-void S(){ // Stops all motors
+void Stop(){ // Stops all motors
   analogWrite( RM1, 0); 
   analogWrite( RM2, 0); 
 

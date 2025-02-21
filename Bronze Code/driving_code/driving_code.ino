@@ -77,7 +77,7 @@ void loop() {
     if (c == 'z'){ // If start signal received from client
 
       if (distance <= 10 || distance >= 2000) {
-        S();
+        Stop();
         server.write('o'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } else {
         Drive();
@@ -89,7 +89,7 @@ void loop() {
     }
 
     if (c == 's'){ // If Stop signal received from client
-      S();
+      Stop();
       keepDriving = false; // Buggy has been stopped
     }
   }
@@ -97,7 +97,7 @@ void loop() {
   else{  // If client briefly disconnects
      if (keepDriving == true){  // Keep driving if previously driving
       if (distance <= 10 || distance >= 2000) {
-        S();
+        Stop();
         server.write('o'); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } else {
         Drive();
@@ -105,7 +105,7 @@ void loop() {
         Serial.println(distance_traveled);
       }
     } else {
-      S();
+      Stop();
     }
     matrix.loadFrame(wifi_x);
   }
