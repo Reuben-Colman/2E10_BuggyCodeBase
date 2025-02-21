@@ -21,7 +21,7 @@ char pass[] = "9F34MP2P2FJ4K3BD";  // WiFi password
 const int slowSpeed = 255; // speed while turning
 const int highSpeed = 120; // speed while going foward
 
-const double distance_on_foward = 1; // distance traveled by 1 call of foward
+const double distance_on_foward = 0.1; // distance traveled by 1 call of foward
 double distance_traveled = 0; // global variable, distance traveled
 
 const int REYE = 13; // Right IR Sensor pin 
@@ -84,7 +84,6 @@ void loop() {
       if (distance <= 10 || distance >= 2000) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
         Stop(); // stops the buggy
         server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
-        //Serial.println("OBSTACLE");
       } else {
         Drive(); // calls the drive function
       }
