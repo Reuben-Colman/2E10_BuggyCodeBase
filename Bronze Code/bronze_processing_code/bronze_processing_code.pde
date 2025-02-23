@@ -24,8 +24,8 @@ void setup() {
   textFont(font);
   
   // Initialize client (replace with your Arduino IP)
-  myClient = new Client(this, "192.168.1.14", 5200  );
-  myClient2 = new Client(this, "192.168.1.14", 5800  );
+  myClient = new Client(this, "192.168.1.12", 5200  );
+  myClient2 = new Client(this, "192.168.1.12", 5800  );
 
   // Initialize switch positions
   switchPosition = targetPosition = 20;
@@ -46,7 +46,7 @@ void draw() {
   while(myClient2.available() > 0){
     distance = myClient2.readChar();
   }
-  int distanceTraveled = int(distance); // Convert distance char to an integer
+  float distanceTraveled = int(distance); // Convert distance char to an integer
    
   timeSinceObstacle = millis() - timeWhenObstacle;
   
@@ -57,9 +57,9 @@ void draw() {
   text("BUGGY CONTROLER", width/2, 25);
 
   // Distance display
-  fill(#000000);
+  fill(#666666);
   textSize(30);
-  text("Distance: " + nf(distanceTraveled) + " m", width/2, 200);
+  text("Distance: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 200);
   
   // Animate switch
   switchPosition = lerp(switchPosition, targetPosition, 0.2);

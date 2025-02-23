@@ -21,7 +21,7 @@ char pass[] = "9F34MP2P2FJ4K3BD";  // WiFi password
 const int slowSpeed = 255; // speed while turning
 const int highSpeed = 120; // speed while going foward
 
-const double distance_on_foward = 0.1; // distance traveled by 1 call of foward
+const double distance_on_foward = 0.005; // distance traveled by 1 call of foward
 double distance_traveled = 0; // global variable, distance traveled
 
 const int REYE = 13; // Right IR Sensor pin 
