@@ -13,6 +13,7 @@ int timeWhenObstacle;
 int timeSinceObstacle;
 String input = "s";
 int distance = 0;
+Button resetDistanceBtn;
 
 void setup() {
   size(500, 700);
@@ -29,7 +30,9 @@ void setup() {
 
   // Initialize switch positions
   switchPosition = targetPosition = 20;
-  powerSwitch = new SliderSwitch(width/2 - 60, height/2 - 25, 120, 50);
+  powerSwitch = new SliderSwitch(width/2 - 60, height/2 + 50, 120, 50);
+  
+  resetDistanceBtn = new Button("RESET", width/2 - 75, 260, 150, 40, #FF5555);
 }
 
 void draw() {
@@ -60,6 +63,9 @@ void draw() {
   fill(#666666);
   textSize(30);
   text("Distance: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 200);
+  
+  //Reset Button
+  resetDistanceBtn.display();
   
   // Animate switch
   switchPosition = lerp(switchPosition, targetPosition, 0.2);
@@ -109,6 +115,12 @@ void mousePressed() {
       println("Sent command: " + (isPowered ? "START" : "STOP"));
     }
   }
+  
+  if (resetDistanceBtn.isOver()) {
+    distanceTraveled = 0.0;
+    distance = 0;
+    println("Distance reset");
+  }
 }
 
 class SliderSwitch {
@@ -154,5 +166,41 @@ class SliderSwitch {
     textAlign(CENTER, CENTER);
     text("OFF", x + 20, y + switchHeight + 15);
     text("ON", x + switchWidth - 20, y + switchHeight + 15);
+  }
+}
+
+class Button {
+  String label;
+  float x, y, w, h;
+  color btnColor, baseColor;
+  
+  Button(String label, float x, float y, float w, float h, color c) {
+    this.label = label;
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.baseColor = c;
+    this.btnColor = c;
+  }
+  
+  boolean isOver() {
+    return mouseX > x && mouseX < x + w && 
+           mouseY > y && mouseY < y + h;
+  }
+  
+  void display() {
+    // Hover effect
+    btnColor = isOver() ? lerpColor(baseColor, color(255, 200, 200), 0.2) : baseColor;
+    
+    // Button body
+    fill(btnColor);
+    rect(x, y, w, h, 5);
+    
+    // Button text
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(16);
+    text(label, x + w/2, y + h/2);
   }
 }
