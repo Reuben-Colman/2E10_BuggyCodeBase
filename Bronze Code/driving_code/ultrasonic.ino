@@ -8,5 +8,4 @@ int Ultrasonic() {
   distance = (duration/2) / 29.1; // calculates the distance based on the time taken for the pulse to return
 
   return distance; // returns the distance
-  //return 5;
 }

@@ -16,8 +16,8 @@ int distance = 0;
 Button resetDistanceBtn;
 
 void setup() {
-  size(500, 700);
-  surface.setTitle("Buggy Controller");
+  size(500, 700); //Window size
+  surface.setTitle("Buggy Controller"); //title
   smooth();
   noStroke();
   
@@ -25,33 +25,33 @@ void setup() {
   textFont(font);
   
   // Initialize client (replace with your Arduino IP)
-  myClient = new Client(this, "192.168.1.37", 5200  );
-  myClient2 = new Client(this, "192.168.1.37", 5800  );
+  myClient = new Client(this, "192.168.1.37", 5200  ); //Ultrasonic Client
+  myClient2 = new Client(this, "192.168.1.37", 5800  ); //Distance Traveled Client
 
   // Initialize switch positions
   switchPosition = targetPosition = 20;
-  powerSwitch = new SliderSwitch(width/2 - 60, height/2 + 50, 120, 50);
+  powerSwitch = new SliderSwitch(width/2 - 60, height/2 + 50, 120, 50); //Slider switch for on/off
   
-  resetDistanceBtn = new Button("RESET", width/2 - 75, 260, 150, 40, #FF5555);
+  resetDistanceBtn = new Button("RESET", width/2 - 75, 260, 150, 40, #FF5555); //distance traveled reset button
 }
 
 void draw() {
   background(255); // White background
   
-  // Handle incoming data
-  while(myClient.available() > 0){
+  // Incoming data from Arduino
+  while(myClient.available() > 0){ // Ultrasonic data
     String input = myClient.readStringUntil('\n');
     if (input != null){
-      parseArduinoData(input);
+      ArduinoData(input);
     }
   }
   
-  while(myClient2.available() > 0){
+  while(myClient2.available() > 0){ //Distance Traveled Data
     distance = myClient2.readChar();
   }
-  float distanceTraveled = int(distance); // Convert distance char to an integer
+  float distanceTraveled = int(distance); // Convert distance character to an integer
    
-  timeSinceObstacle = millis() - timeWhenObstacle;
+  timeSinceObstacle = millis() - timeWhenObstacle; //timer for ultrasonic
   
   // Title
   fill(#666666);
@@ -64,10 +64,10 @@ void draw() {
   textSize(30);
   text("Distance Traveled: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 200);
   
-  //Reset Button
+  //Reset distance traveled button
   resetDistanceBtn.display();
   
-  // Animate switch
+  // Slider switch
   switchPosition = lerp(switchPosition, targetPosition, 0.2);
   powerSwitch.display(switchPosition);
   
@@ -75,11 +75,11 @@ void draw() {
   drawStatusMessages();
 }
 
-void parseArduinoData(String data) {
+void ArduinoData(String data) {
   String[] messages = split(data, '\n');
   for (String msg : messages) {
     msg = msg.trim();
-    println("Raw message: " + msg);  // Debug line
+    println("Raw message: " + msg);  // Prints imput data
     
     if (msg.equals("OBSTACLE")) {
       timeWhenObstacle = millis();
@@ -88,12 +88,12 @@ void parseArduinoData(String data) {
     }
   }
 
-
-void drawStatusMessages() {
-  String statusText = "Status: " + (isPowered ? "DRIVING" : "STOPPED");
+//Status text
+void drawStatusMessages() { 
+  String statusText = "Status: " + (isPowered ? "DRIVING" : "STOPPED"); //displays driving or stopped based on switch
   color statusColor = #666666;
   
-  if(timeSinceObstacle < 500) {
+  if(timeSinceObstacle < 500) { //displays obstacle detected in red
     statusText = "Status: OBSTACLE DETECTED!";
     println("Obstacle dectected");
     statusColor = #FF0000;
@@ -106,25 +106,25 @@ void drawStatusMessages() {
 }
 
 void mousePressed() {
-  if (powerSwitch.isOver()) {
+  if (powerSwitch.isOver()) { //slider switch logic
     isPowered = !isPowered;
     targetPosition = isPowered ? powerSwitch.switchWidth - 20 : 20;
     
     if(myClient.active()) {
-      myClient.write(isPowered ? "z\n" : "s\n");
+      myClient.write(isPowered ? "z\n" : "s\n"); //Sends z or s based on slider switch position
       println("Sent command: " + (isPowered ? "START" : "STOP"));
     }
   }
   
-  if (resetDistanceBtn.isOver()) {
-    distanceTraveled = 0.0;
-    distance = 0;
-    myClient.write("r");
+  if (resetDistanceBtn.isOver()) { //reset button logic
+    distanceTraveled = 0.0; //sets processing distance traveled to 0;
+    distance = 0; //sets processing distance to 0;
+    myClient.write("r"); // sends reset code to arduino to reset distance traveled
     println("Distance reset");
   }
 }
 
-class SliderSwitch {
+class SliderSwitch { // slider switch
   float x, y, switchWidth, switchHeight;
   color trackColor, knobColorOff, knobColorOn;
   
@@ -170,7 +170,7 @@ class SliderSwitch {
   }
 }
 
-class Button {
+class Button { // reset button 
   String label;
   float x, y, w, h;
   color btnColor, baseColor;

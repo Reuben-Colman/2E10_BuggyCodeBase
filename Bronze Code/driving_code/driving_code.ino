@@ -18,12 +18,16 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
 char ssid[] = "VODAFONE-0784"; // WiFi Name
 char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
 
+//Driving Speeds
 const int slowSpeed = 255; // speed while turning
 const int highSpeed = 120; // speed while going foward
 
+//Buggy Distance Traveled Variables
 const double distance_on_foward = 0.005; // distance traveled by 1 call of foward
 double distance_traveled = 0; // global variable, distance traveled
+char j;
 
+//Arduino PINS
 const int REYE = 13; // Right IR Sensor pin 
 const int LEYE = 12;  // Left IR Sensor pin
 
@@ -35,18 +39,16 @@ const int RM2 = 7; // Right Motor Pin 2
 const int echoPin = 6; // Echo Pin for Ultrasonic Sensor
 const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 
+//Ultrasonic variables
 long duration; // Length of time for ultrasonic ping to return
 int distance; // Distance from buggy to obstacle
 bool keepDriving = false; // True if buggy receives instruction to start
-int lastDistanceUpdate;
 
 int LEYE_Status = digitalRead( LEYE ); // Current status of Left IR Sensor
 int REYE_Status = digitalRead( REYE ); // Current status of Right IR Sensor
 
 WiFiServer server(5200); // Creating Server object
 WiFiServer server2(5800);
-
-char j;
 
 void setup() {
   Serial.begin(9600);
@@ -116,5 +118,5 @@ void loop() {
     matrix.loadFrame(wifi_x); // displays x on the led matrix, as wifi is not currently connected
   }
 
-  processingDistance(distance_traveled);
+  processingDistance(distance_traveled); //Sends distance traveled to processing
 }
