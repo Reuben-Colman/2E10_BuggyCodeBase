@@ -25,8 +25,8 @@ void setup() {
   textFont(font);
   
   // Initialize client (replace with your Arduino IP)
-  myClient = new Client(this, "192.168.1.12", 5200  );
-  myClient2 = new Client(this, "192.168.1.12", 5800  );
+  myClient = new Client(this, "192.168.1.37", 5200  );
+  myClient2 = new Client(this, "192.168.1.37", 5800  );
 
   // Initialize switch positions
   switchPosition = targetPosition = 20;
@@ -54,7 +54,7 @@ void draw() {
   timeSinceObstacle = millis() - timeWhenObstacle;
   
   // Title
-  fill(#333333);
+  fill(#666666);
   textAlign(CENTER, TOP);
   textSize(34);
   text("BUGGY CONTROLER", width/2, 25);
@@ -62,7 +62,7 @@ void draw() {
   // Distance display
   fill(#666666);
   textSize(30);
-  text("Distance: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 200);
+  text("Distance Traveled: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 200);
   
   //Reset Button
   resetDistanceBtn.display();
@@ -119,6 +119,7 @@ void mousePressed() {
   if (resetDistanceBtn.isOver()) {
     distanceTraveled = 0.0;
     distance = 0;
+    myClient.write("r");
     println("Distance reset");
   }
 }

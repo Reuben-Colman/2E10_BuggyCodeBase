@@ -15,8 +15,8 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
 		0x90108204
 };
 
-char ssid[] = "VODAFONE-5C78"; // WiFi Name
-char pass[] = "9F34MP2P2FJ4K3BD";  // WiFi password
+char ssid[] = "VODAFONE-0784"; // WiFi Name
+char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
 
 const int slowSpeed = 255; // speed while turning
 const int highSpeed = 120; // speed while going foward
@@ -92,7 +92,13 @@ void loop() {
 
     if (c == 's'){ // If Stop signal received from client
       Stop(); // stops the buggy
+      Serial.println("Buggy Stopped");
       keepDriving = false; // Buggy has been stopped
+    }
+
+    if (c == 'r'){ // If Reset signal received from client
+      distance_traveled = 0; //resets distance to 0;
+      Serial.println("Distance Traveled Reset");
     }
   }
 
