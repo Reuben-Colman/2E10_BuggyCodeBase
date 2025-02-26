@@ -15,15 +15,15 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
 		0x90108204
 };
 
-char ssid[] = "VODAFONE-0784"; // WiFi Name
-char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
+char ssid[] = "A15"; // WiFi Name
+char pass[] = "sean1234";  // WiFi password
 
 //Driving Speeds
 const int slowSpeed = 255; // speed while turning
-const int highSpeed = 120; // speed while going foward
+const int highSpeed = 130; // speed while going foward
 
 //Buggy Distance Traveled Variables
-const double distance_on_foward = 0.005; // distance traveled by 1 call of foward
+const double distance_on_foward = 0.005/2; // distance traveled by 1 call of foward
 double distance_traveled = 0; // global variable, distance traveled
 char j;
 
@@ -76,46 +76,13 @@ void setup() {
 
 void loop() {
   distance = Ultrasonic(); // call ultrasonic to get distance to object
-  
-  WiFiClient client = server.available(); // Waiting for a client to connect
+
+  WiFiClient client = server.available();
   if (client.connected()) {
-    Serial.println("Connected"); // prints that the buggy connected to processing
-    matrix.loadFrame(wifi_check); // loads check mark on led matrix to confirm wifi conncection
-    char c = client.read(); // reads the imput from processing
-    if (c == 'z'){ // If start signal received from client
-      if (distance <= 10 || distance >= 2000) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
-        Stop(); // stops the buggy
-        server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
-      } else {
-        Drive(); // calls the drive function
-      }
-      keepDriving = true; // Buggy has been started
-    }
-
-    if (c == 's'){ // If Stop signal received from client
-      Stop(); // stops the buggy
-      Serial.println("Buggy Stopped");
-      keepDriving = false; // Buggy has been stopped
-    }
-
-    if (c == 'r'){ // If Reset signal received from client
-      distance_traveled = 0; //resets distance to 0;
-      Serial.println("Distance Traveled Reset");
-    }
+    ClientConnect(client);
   }
-
-  else{  // If client briefly disconnects
-     if (keepDriving == true){  // Keep driving if previously driving
-      if (distance <= 10 || distance >= 2000) {
-        Stop(); // stops the buggy
-        server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
-      } else {
-        Drive(); // calls the drive function
-      }
-    } else {
-      Stop();// stops the buggy
-    }
-    matrix.loadFrame(wifi_x); // displays x on the led matrix, as wifi is not currently connected
+  else{  // If client is not connected
+     DrivingStatus();
   }
 
   processingDistance(distance_traveled); //Sends distance traveled to processing

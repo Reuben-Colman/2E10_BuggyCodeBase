@@ -1,4 +1,3 @@
-
 void Drive() {
   LEYE_Status = digitalRead( LEYE ); // Store current status of Left Eye
   REYE_Status = digitalRead( REYE ); // Store current status of Right Eye
@@ -14,6 +13,20 @@ void Drive() {
   if(REYE_Status == LOW){ // If left ir dect white, turn right motor, and stop left motor
     TurnRight(); // if the buggy needs to turn right, calls "TurnRight"
   }
+}
+
+void DrivingStatus(){
+  if (keepDriving == true){  // Keep driving if previously driving
+      if (distance <= 10) { // if ultrasonic measures, object is less then 10 cm away
+        Stop(); // stops the buggy
+        server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
+      } else {
+        Drive(); // calls the drive function
+      }
+    } else { // if keepDriving == false
+      Stop();// stops the buggy
+    }
+    matrix.loadFrame(wifi_x); // displays x on the led matrix, as client is not currently connected
 }
 
 void foward() { // drives both motors foward

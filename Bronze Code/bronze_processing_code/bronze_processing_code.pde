@@ -4,7 +4,7 @@ Client myClient;
 Client myClient2;
 boolean isPowered = false;
 boolean obstacleDetected = false;
-SliderSwitch powerSwitch;
+ToggleSwitch powerSwitch;
 PFont font;
 float switchPosition;
 float targetPosition;
@@ -25,12 +25,12 @@ void setup() {
   textFont(font);
   
   // Initialize client (replace with your Arduino IP)
-  myClient = new Client(this, "192.168.1.37", 5200  ); //Ultrasonic Client
-  myClient2 = new Client(this, "192.168.1.37", 5800  ); //Distance Traveled Client
+  myClient = new Client(this, "192.168.61.149", 5200  ); //Ultrasonic Client
+  myClient2 = new Client(this, "192.168.61.149", 5800  ); //Distance Traveled Client
 
   // Initialize switch positions
   switchPosition = targetPosition = 20;
-  powerSwitch = new SliderSwitch(width/2 - 60, height/2 + 50, 120, 50); //Slider switch for on/off
+  powerSwitch = new ToggleSwitch(width/2 - 60, height/2 + 50, 120, 50); //toggle switch for on/off
   
   resetDistanceBtn = new Button("RESET", width/2 - 75, 260, 150, 40, #FF5555); //distance traveled reset button
 }
@@ -67,7 +67,7 @@ void draw() {
   //Reset distance traveled button
   resetDistanceBtn.display();
   
-  // Slider switch
+  // Toggle switch
   switchPosition = lerp(switchPosition, targetPosition, 0.2);
   powerSwitch.display(switchPosition);
   
@@ -106,12 +106,12 @@ void drawStatusMessages() {
 }
 
 void mousePressed() {
-  if (powerSwitch.isOver()) { //slider switch logic
+  if (powerSwitch.isOver()) { //toggle switch logic
     isPowered = !isPowered;
     targetPosition = isPowered ? powerSwitch.switchWidth - 20 : 20;
     
     if(myClient.active()) {
-      myClient.write(isPowered ? "z\n" : "s\n"); //Sends z or s based on slider switch position
+      myClient.write(isPowered ? "z\n" : "s\n"); //Sends z or s based on toggle switch position
       println("Sent command: " + (isPowered ? "START" : "STOP"));
     }
   }
@@ -124,11 +124,11 @@ void mousePressed() {
   }
 }
 
-class SliderSwitch { // slider switch
+class ToggleSwitch { // toggle switch
   float x, y, switchWidth, switchHeight;
   color trackColor, knobColorOff, knobColorOn;
   
-  SliderSwitch(float x, float y, float w, float h) {
+  ToggleSwitch(float x, float y, float w, float h) {
     this.x = x;
     this.y = y;
     this.switchWidth = w;
@@ -154,7 +154,7 @@ class SliderSwitch { // slider switch
     
     // Hover effect
     if (isOver()) {
-      knobColor = lerpColor(knobColor, color(0), 0.1);
+      knobColor = lerpColor(knobColor, color(255, 255, 255), 0.2);
     }
     
     // Draw sliding knob
@@ -192,7 +192,7 @@ class Button { // reset button
   
   void display() {
     // Hover effect
-    btnColor = isOver() ? lerpColor(baseColor, color(255, 200, 200), 0.2) : baseColor;
+    btnColor = isOver() ? lerpColor(baseColor, color(255, 255, 255), 0.2) : baseColor;
     
     // Button body
     fill(btnColor);
