@@ -1,7 +1,7 @@
 ```mermaid
 flowchart LR
   A[WiFi Buggy Controller] -- Go / Stop / Reset --> C[Arduino]
-  C -- Distance / Status --> A
+  C -- Distance Traveled / Status --> A
 
   C ==> D[Left Motor]
   E[Right IRSensors] ==> C
