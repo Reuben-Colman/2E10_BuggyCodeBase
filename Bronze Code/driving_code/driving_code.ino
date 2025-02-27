@@ -20,7 +20,7 @@ char pass[] = "sean1234";  // WiFi password
 
 //Driving Speeds
 const int slowSpeed = 255; // speed while turning
-const int highSpeed = 130; // speed while going foward
+cnst int highSpeed = 130; // speed while going foward
 
 //Buggy Distance Traveled Variables
 const double distance_on_foward = 0.005/2; // distance traveled by 1 call of foward
@@ -41,14 +41,14 @@ const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 
 //Ultrasonic variables
 long duration; // Length of time for ultrasonic ping to return
-int distance; // Distance from buggy to obstacle
+int distance = 0; // Distance from buggy to obstacle
 bool keepDriving = false; // True if buggy receives instruction to start
 
 int LEYE_Status = digitalRead( LEYE ); // Current status of Left IR Sensor
 int REYE_Status = digitalRead( REYE ); // Current status of Right IR Sensor
 
-WiFiServer server(5200); // Creating Server object
-WiFiServer server2(5800);
+WiFiServer server(5200); // Creating Server1
+WiFiServer server2(5800); // Creating Server2
 
 void setup() {
   Serial.begin(9600);
@@ -64,7 +64,6 @@ void setup() {
   pinMode( RM2, LOW); // Set Right Motor Logic pin 2 to low
   pinMode(trigPin, OUTPUT); // trigPin OUTPUT
   pinMode(echoPin, INPUT); // echoPin  INPUT
-  distance = 0; // No obstacle in front
   WiFi.begin(ssid, pass); // Initialize the WiFi library's network settings
   IPAddress ip = WiFi.localIP(); // IP Address of arduino
   Serial.print("IP Address:"); // prints IP Address of Arduino to connect to with Processing
@@ -77,9 +76,9 @@ void setup() {
 void loop() {
   distance = Ultrasonic(); // call ultrasonic to get distance to object
 
-  WiFiClient client = server.available();
-  if (client.connected()) {
-    ClientConnect(client);
+  WiFiClient client = server.available(); // arduino server is avaliable to connect
+  if (client.connected()) { // if the client sends data to arduino
+    ClientConnected(client); //runs the client connection function 
   }
   else{  // If client is not connected
      DrivingStatus();

@@ -1,18 +1,17 @@
-void ClientConnect(WiFiClient client){
+void ClientConnected(WiFiClient client){
     Serial.println("Connected"); // prints that the buggy connected to processing
     matrix.loadFrame(wifi_check); // loads check mark on led matrix to confirm wifi conncection
     char c = client.read(); // reads the imput from processing
 
     if (c == 'z'){ // If start signal received from client
-
       if (distance <= 10) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
         Stop(); // stops the buggy
         server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
-      } else {
+      } 
+      else {
         Drive(); // calls the drive function
       }
-      keepDriving = true; // Buggy has been started
-      
+    keepDriving = true; // Buggy has been started
     }
 
     if (c == 's'){ // If Stop signal received from client
