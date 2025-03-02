@@ -18,10 +18,6 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
 char ssid[] = "A15"; // WiFi Name
 char pass[] = "sean1234";  // WiFi password
 
-//Driving Speeds
-const int slowSpeed = 255; // speed while turning
-cnst int highSpeed = 130; // speed while going foward
-
 //Buggy Distance Traveled Variables
 const double distance_on_foward = 0.005/2; // distance traveled by 1 call of foward
 double distance_traveled = 0; // global variable, distance traveled
@@ -39,9 +35,6 @@ const int RM2 = 7; // Right Motor Pin 2
 const int echoPin = 6; // Echo Pin for Ultrasonic Sensor
 const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 
-//Ultrasonic variables
-long duration; // Length of time for ultrasonic ping to return
-int distance = 0; // Distance from buggy to obstacle
 bool keepDriving = false; // True if buggy receives instruction to start
 
 int LEYE_Status = digitalRead( LEYE ); // Current status of Left IR Sensor
@@ -83,6 +76,6 @@ void loop() {
   else{  // If client is not connected
      DrivingStatus();
   }
-
+  
   processingDistance(distance_traveled); //Sends distance traveled to processing
 }

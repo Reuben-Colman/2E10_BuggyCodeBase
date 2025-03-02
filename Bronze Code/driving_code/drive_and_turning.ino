@@ -1,8 +1,7 @@
 //Driving Speeds
 const int slowSpeed = 255; // speed while turning
 const int highSpeed = 130; // speed while going foward
-
-
+  
 void Drive() {
   LEYE_Status = digitalRead( LEYE ); // Store current status of Left Eye
   REYE_Status = digitalRead( REYE ); // Store current status of Right Eye
