@@ -78,3 +78,22 @@ sequenceDiagram
   Stop Function ->> Motors: Stop Both Motors
   Arduino ->> Client2: Send the distance travel to the client
 ```
+Drive Function Sequence sequenceDiagram
+```mermaid
+sequenceDiagram
+  Drive Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Drive Function: No!
+  Drive Function ->> Motors: Both Motors go foward, and add to the distance traveled
+```
+```mermaid
+sequenceDiagram
+  Drive Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Drive Function: Yes, the left one!
+  Drive Function ->> Motors: Reverse the left motor
+```
+```mermaid
+sequenceDiagram
+  Drive Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Drive Function: Yes, the Right one!
+  Drive Function ->> Motors: Reverse the right motor
+```
