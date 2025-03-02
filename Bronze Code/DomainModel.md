@@ -1,19 +1,4 @@
-```mermaid
-flowchart LR
-  A[WiFi Buggy Controller] -- Go / Stop / Reset --> C[Arduino]
-  C -- Distance Traveled / Status --> A
-
-  C ==> D[Left Motor]
-  E[Right IRSensors] ==> C
-  G[Left IRSensors] ==> C
-  C ==> F[Ultrasonic Sensor]
-  C ==> B[Right Motor]
-
-  F -- Obstacle within 10cm --> C
-  E -.-> B
-  G -.-> D
-```
-Start Command Sent
+Start Command Received
 ```mermaid
 sequenceDiagram
   Arduino ->> Ultrasonic Sensor: What is the distance to the next Obstacle?
@@ -27,7 +12,7 @@ sequenceDiagram
   Drive Function ->> Motors: Both Motors go foward, and add to the distance traveled
   Arduino ->> Client2: Send the distance travel to the client
 ```
-Stop Command Sent
+Stop Command Received
 ```mermaid
 sequenceDiagram
   Arduino ->> Ultrasonic Sensor: What is the distance to the next Obstacle?
