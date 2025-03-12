@@ -1,6 +1,3 @@
-long duration; // Length of time for ultrasonic ping to return
-int distance = 0; // Distance from buggy to obstacle
-
 int Ultrasonic() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);

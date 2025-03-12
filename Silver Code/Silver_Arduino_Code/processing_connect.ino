@@ -9,21 +9,30 @@ void ClientConnected(WiFiClient client){
         server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
       } 
       else {
-        Drive(); // calls the drive function
+        Drive_Reference_Speed(); // calls the drive function
       }
-    keepDriving = true; // Buggy has been started
+    keepDriving = "Go"; // Buggy has been started
     }
 
     if (c == 's'){ // If Stop signal received from client
       Stop(); // stops the buggy
       Serial.println("Buggy Stopped");
-      keepDriving = false; // Buggy has been stopped
+      keepDriving = "Stop"; // Buggy has been stopped
+    }
+
+    if (c == 'f'){ // If folllowing signal received from client
+      Drive_Following(); // stops the buggy
+      Serial.println("Buggy Following"); 
+      keepDriving = "Following"; // Buggy has been stopped
     }
 
     if (c == 'r'){ // If Reset signal received from client
       distance_traveled = 0; //resets distance to 0;
       Serial.println("Distance Traveled Reset");
     }
+
+    
+
 }
 
 

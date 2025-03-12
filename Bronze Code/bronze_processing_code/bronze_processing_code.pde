@@ -25,8 +25,8 @@ void setup() {
   textFont(font);
   
   // Initialize client (replace with your Arduino IP)
-  myClient = new Client(this, "192.168.61.149", 5200  ); //Ultrasonic Client
-  myClient2 = new Client(this, "192.168.61.149", 5800  ); //Distance Traveled Client
+  myClient = new Client(this, "192.168.225.149", 5200  ); //Ultrasonic Client
+  myClient2 = new Client(this, "192.168.225.149", 5800  ); //Distance Traveled Client
 
   // Initialize switch positions
   switchPosition = targetPosition = 20;
