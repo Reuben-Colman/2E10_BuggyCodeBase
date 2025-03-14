@@ -38,6 +38,12 @@ const int RM2 = 7; // Right Motor Pin 2
 const int RENC = 1; // Right Encoder Pin
 const int LENC = 0; // Ledt Encoder Pin
 
+const int PULSES_PER_CYCLE = 8;
+const float WHEEL_CIRCUMFERENCE = 0.2042; // Updated for 6.5 cm wheel (converted to meters)
+
+volatile int pulseCount = 0; // Stores encoder pulse count
+unsigned long lastTime = 0;
+
 const int echoPin = 6; // Echo Pin for Ultrasonic Sensor
 const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 
@@ -87,6 +93,8 @@ void setup() {
   pinMode(RENC, INPUT_PULLUP); // enables pull up risistor on right encoder pin
   pinMode(LENC, INPUT_PULLUP); // enables pull up risistor on left encoder pin
 
+  attachInterrupt(digitalPinToInterrupt(RENC), countPulses, RISING);
+
   WiFi.begin(ssid, pass); // Initialize the WiFi library's network settings
   IPAddress ip = WiFi.localIP(); // IP Address of arduino
   Serial.print("IP Address:"); // prints IP Address of Arduino to connect to with Processing
@@ -97,7 +105,7 @@ void setup() {
 }
 
 void loop() {
-  Input = Ultrasonic(); // call ultrasonic to get distance to object
+  distance = Ultrasonic(); // call ultrasonic to get distance to object
 
   WiFiClient client = server.available(); // arduino server is avaliable to connect
   if (client.connected()) { // if the client sends data to arduino

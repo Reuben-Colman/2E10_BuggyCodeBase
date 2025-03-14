@@ -3,6 +3,10 @@ void ClientConnected(WiFiClient client){
     matrix.loadFrame(wifi_check); // loads check mark on led matrix to confirm wifi conncection
     char c = client.read(); // reads the imput from processing
 
+    if ( c !== 'z' || 's' || 'f' || 'r'){
+      Set_Speed = (int) c;
+    }
+
     if (c == 'z'){ // If start signal received from client
       if (distance <= 10) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
         Stop(); // stops the buggy
@@ -30,9 +34,6 @@ void ClientConnected(WiFiClient client){
       distance_traveled = 0; //resets distance to 0;
       Serial.println("Distance Traveled Reset");
     }
-
-    
-
 }
 
 

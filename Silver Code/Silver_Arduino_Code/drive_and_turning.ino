@@ -2,7 +2,7 @@
 //const int FowardSpeed = 130; // speed while foward
 const int TurningSpeed = 255; // speed while turning
   
-void Drive_Reference_Speed(Speed){ //Driving With Input Speed
+void Drive_Reference_Speed(){ //Driving With Input Speed
   LEYE_Status = digitalRead( LEYE ); // Store current status of Left Eye
   REYE_Status = digitalRead( REYE ); // Store current status of Right Eye
 
@@ -17,16 +17,19 @@ void Drive_Reference_Speed(Speed){ //Driving With Input Speed
   if(REYE_Status == LOW && LEYE_Status == HIGH){ // If left ir dect white, turn right motor, and stop left motor
     TurnRight(TurningSpeed); // calls the TurnRight function
   }
+
+  encoder();
 }
 
 void Drive_Following(){ //Driving With Input Speed
   LEYE_Status = digitalRead( LEYE ); // Store current status of Left Eye
   REYE_Status = digitalRead( REYE ); // Store current status of Right Eye
 
-  dist = Ultrasonic();
+  Input = Ultrasonic();
+  myPID.Compute();
 
   if(LEYE_Status == HIGH && REYE_Status == HIGH){ // If both IR Sensors detect black
-    foward(Speed); // calls the foward function
+    foward(Output); // calls the foward function
   }
 
   if(LEYE_Status == LOW && REYE_Status == HIGH){ // If left ir dect white, turn right motor, and stop left motor
