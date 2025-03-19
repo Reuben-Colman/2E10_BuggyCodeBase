@@ -1,5 +1,5 @@
 void ClientConnected(WiFiClient client) {
-  Serial.println("Connected"); // prints that the buggy connected to processing
+  //Serial.println("Connected"); // prints that the buggy connected to processing
   matrix.loadFrame(wifi_check); // loads check mark on led matrix to confirm wifi conncection
   char c = client.read(); // reads the imput from processing
 

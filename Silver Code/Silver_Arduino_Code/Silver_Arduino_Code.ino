@@ -33,14 +33,14 @@ const int REYE = 13; // Right IR Sensor pin
 const int LEYE = 12;  // Left IR Sensor pin
 
 const int LM1 = 5; // Left Motor Pin 1
-const int LM2 = 6; // Left Motor Pin 2
+const int LM2 = 9; // Left Motor Pin 2
 const int RM1 = 3; // Right Motor Pin 1
-const int RM2 = 7; // Right Motor Pin 2
+const int RM2 = 6; // Right Motor Pin 2
 
 const int RENC = 1; // Right Encoder Pin
 const int LENC = 0; // Ledt Encoder Pin
 
-const float distancePulse = (2 * 3.1416 * 0.065/2) / 8;
+const float distancePulse = (2 * 3.1416 * 0.65/2) / 8;
 
 volatile int pulseCount = 0; // Stores encoder pulse count
 unsigned long lastSpeedTime = 0;
