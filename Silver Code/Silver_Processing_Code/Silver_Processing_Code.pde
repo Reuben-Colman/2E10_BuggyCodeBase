@@ -3,6 +3,7 @@ import processing.net.*;
 Client myClient;
 Client myClient2;
 Client myClient3;
+
 boolean obstacleDetected = false;
 PFont font;
 float distanceTraveled = 0.0;
@@ -10,9 +11,13 @@ int timeWhenObstacle;
 int timeSinceObstacle;
 String input = "s";
 int distance = 0;
+int speed = 0;
 Button resetDistanceBtn;
 ToggleSwitch threeWaySwitch;
+Speedometer mySpeedometer;
 int lastPosition = -1; // To track switch position changes
+float radius = 140;
+NumberInput speedInput;
 
 String IP = "192.168.61.149";
 
@@ -30,8 +35,9 @@ void setup() {
   myClient3 = new Client(this, IP, 6000); // Buggy Speed Client
   
   threeWaySwitch = new ToggleSwitch(width/2 + 100, height/2 + 350, 200, 50);
-  
-  resetDistanceBtn = new Button("RESET", width/2 - 75, 260, 150, 40, #FF5555);
+  resetDistanceBtn = new Button("RESET", width/2 - 75, 135, 150, 40, #FF5555);
+  mySpeedometer = new Speedometer(width/2, height/2, 125, font);
+  speedInput = new NumberInput(width/2 - 50, 350, 100, 40);
 }
 
 void draw() {
@@ -55,11 +61,16 @@ void draw() {
   drawDistanceDisplay();
   resetDistanceBtn.display();
   
+  speedInput.display();
+  speedInput.handleInput();
+  
   // Handle 3-way switch
   threeWaySwitch.handleInput();
   threeWaySwitch.display();
   handleSwitchPosition();
   
+  mySpeedometer.setSpeed(speed);
+  mySpeedometer.display();
   drawStatusMessages();
 }
 
@@ -90,8 +101,14 @@ void drawTitle() {
 
 void drawDistanceDisplay() {
   fill(#666666);
-  textSize(30);
-  text("Distance Traveled: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 200);
+  textSize(25);
+  text("Distance Traveled: " + nf(distanceTraveled/10, 1, 1) + " m", width/2, 100);
+}
+  
+void drawBuggySpeed() {
+  fill(#666666);
+  textSize(25);
+  text("Buggy Speed: " + nf(speed/10, 1, 1) + " m/s", width/2, 550);
 }
 
 void ArduinoData(String data) {
@@ -105,39 +122,6 @@ void ArduinoData(String data) {
   }
 }
 
-void drawStatusMessages() {
-  String statusText;
-  color statusColor;
-  
-  if(timeSinceObstacle < 500) {
-    statusText = "Status: OBSTACLE DETECTED!";
-    statusColor = #FF4444;
-  } else {
-    switch(threeWaySwitch.currentPosition) {
-      case 0: 
-        statusText = "Status: Driving"; 
-        statusColor = #00C851;
-        break;
-      case 1: 
-        statusText = "Status: OFF"; 
-        statusColor = #FF4444;
-        break;
-      case 2: statusText = 
-        "Status: FOLLOWING"; 
-        statusColor = #00C851;
-        break;
-      default: statusText = 
-        "Status: UNKNOWN";
-        statusColor = #666666;
-    }
-  }
-  
-  textSize(18);
-  fill(statusColor);
-  textAlign(CENTER, CENTER);
-  text(statusText, width/2, height - 50);
-}
-
 void mousePressed() {
   if (resetDistanceBtn.isOver()) {
     distanceTraveled = 0.0;
@@ -145,4 +129,9 @@ void mousePressed() {
     myClient.write("r");
     println("Distance reset");
   }
+  speedInput.handleClick();
+}
+
+void keyPressed() {
+  speedInput.keyPressed();
 }

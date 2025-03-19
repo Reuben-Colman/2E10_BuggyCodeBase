@@ -1,22 +1,27 @@
-encoder(){
+void encoderSpeed(){
   unsigned long currentTime = millis();
-    float elapsedTime = (currentTime - lastTime) / 1000.0; // Convert to seconds
+  if (currentTime - lastSpeedTime >= 100) {
+    EncoderSpeed = (pulseCount * distancePulse) / ((currentTime - lastSpeedTime) / 1000.0);
 
-    if (elapsedTime >= 1.0) {  // Calculate speed every second
-        float wheelRotations = (float)pulseCount / PULSES_PER_CYCLE;
-        float speed = wheelRotations * WHEEL_CIRCUMFERENCE; // Speed in meters per second
+    Serial.print("Speed: ");
+    Serial.print(EncoderSpeed, 3); // Print speed with 3 decimal places
+    Serial.println(" m/s");
 
-        Serial.print("Speed: ");
-        Serial.print(speed, 3); // Print speed with 3 decimal places
-        Serial.println(" m/s");
-
-        // Reset values
-        pulseCount = 0;
-        lastTime = currentTime;
-    }
+    pulseCount = 0;
+    lastSpeedTime = currentTime;
+  }
 }
 
-// Interrupt Service Routine (ISR) for counting pulses
-  void countPulses() {
-    pulseCount++;  // Increment count on each rising edge
+void encoderDistance(){
+  unsigned long currentTime = millis();
+  if (currentTime - lastDistTime >= 100) {
+    distance_traveled += pulseCount * distancePulse;
+
+    Serial.print("Speed: ");
+    Serial.print(distance_traveled, 3); // Print speed with 3 decimal places
+    Serial.println(" m/s");
+
+    pulseCount = 0;
+    lastDistTime = currentTime;
+  }
 }

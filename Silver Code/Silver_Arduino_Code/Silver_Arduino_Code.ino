@@ -23,28 +23,30 @@ char pass[] = "sean1234";  // WiFi password
 const double distance_on_foward = 0.005/2; // distance traveled by 1 call of foward
 double distance_traveled = 0; // global variable, distance traveled
 char j;
+char q;
 
-int Speed = 130;
+int EncoderSpeed = 0; //buggy spped as measured by encoders
+int SetSpeed = 0;
 
 //Arduino PINS
 const int REYE = 13; // Right IR Sensor pin 
 const int LEYE = 12;  // Left IR Sensor pin
 
 const int LM1 = 5; // Left Motor Pin 1
-const int LM2 = 4; // Left Motor Pin 2
+const int LM2 = 6; // Left Motor Pin 2
 const int RM1 = 3; // Right Motor Pin 1
 const int RM2 = 7; // Right Motor Pin 2
 
 const int RENC = 1; // Right Encoder Pin
 const int LENC = 0; // Ledt Encoder Pin
 
-const int PULSES_PER_CYCLE = 8;
-const float WHEEL_CIRCUMFERENCE = 0.2042; // Updated for 6.5 cm wheel (converted to meters)
+const float distancePulse = (2 * 3.1416 * 0.065/2) / 8;
 
 volatile int pulseCount = 0; // Stores encoder pulse count
-unsigned long lastTime = 0;
+unsigned long lastSpeedTime = 0;
+unsigned long lastDistTime = 0;
 
-const int echoPin = 6; // Echo Pin for Ultrasonic Sensor
+const int echoPin = 4; // Echo Pin for Ultrasonic Sensor
 const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 
 String keepDriving = "Stop"; // True if buggy receives instruction to start
@@ -63,13 +65,15 @@ PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT); // Creating PID objec
 
 WiFiServer server(5200); // Creating Server1
 WiFiServer server2(5800); // Creating Server2
+WiFiServer server3(6000); // Creating Server3
+
 
 void setup() {
    //initialize the variables we're linked to
  Setpoint = 20; //At 20cm the buggy is going to stop
  
  //turn the PID on
- Input = analogRead(US_ECHO);
+ Input = Ultrasonic();
  myPID.SetMode(AUTOMATIC);
  myPID.SetOutputLimits(0,255);
 
@@ -105,7 +109,9 @@ void setup() {
 }
 
 void loop() {
-  distance = Ultrasonic(); // call ultrasonic to get distance to object
+  distance = Ultrasonic();
+  Input = distance;
+  myPID.Compute();
 
   WiFiClient client = server.available(); // arduino server is avaliable to connect
   if (client.connected()) { // if the client sends data to arduino
@@ -116,4 +122,8 @@ void loop() {
   }
   
   processingDistance(distance_traveled); //Sends distance traveled to processing
+}
+
+void countPulses() {
+  pulseCount++;
 }
