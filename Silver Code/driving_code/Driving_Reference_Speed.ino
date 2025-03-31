@@ -1,20 +1,19 @@
 void DriveReference() {
-  int speedRefNom = 0;
-  constrain(speedRefNom, 0, 255);
-  speedRefNom = (speedRef/50)*255;
+  Serial.println("DRiving Reference Called");
+  int speedRefNom;
+  speedRefNom = (speedRef / 50) * 255;
+  Serial.println(speedRefNom);
 
-  LEYE_Status = digitalRead( LEYE ); // Store current status of Left Eye
-  REYE_Status = digitalRead( REYE ); // Store current status of Right Eye
+  LEYE_Status = digitalRead(LEYE); // Store current status of Left IR Sensor
+  REYE_Status = digitalRead(REYE); // Store current status of Right IR Sensor
 
-  if(LEYE_Status == HIGH && REYE_Status == HIGH){ // If both IR Sensors detect black
-    foward(speedRefNom); // calls the foward function
+  if (LEYE_Status == LOW && REYE_Status == LOW) { // If both IR Sensors detect black
+    foward(speedRefNom); // call the forward function
   }
-
-  if(LEYE_Status == LOW){ // If left ir dect white, turn right motor, and stop left motor
-    TurnLeft(); // calls the TurnLeft function
+  if (LEYE_Status == HIGH) { // If left IR detects white, turn left
+    TurnLeft();
   }
-
-  if(REYE_Status == LOW){ // If left ir dect white, turn right motor, and stop left motor
-    TurnRight(); // calls the TurnRight function
+  if (REYE_Status == HIGH) { // If right IR detects white, turn right
+    TurnRight();
   }
 }

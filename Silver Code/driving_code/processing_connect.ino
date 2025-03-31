@@ -1,59 +1,60 @@
-// "z" recieved Drive Reference
-// "s" recived Stops buggy
-// "f" recived Drive Following
-// "r" resets the distance traveled
+// "z" received: Drive Reference
+// "f" received: Drive Following
+// "s" received: Stop buggy
+// "r" received: Reset distance traveled
 
-void ClientConnected(WiFiClient client){
-    Serial.println("Connected"); // prints that the buggy connected to processing
-    matrix.loadFrame(wifi_check); // loads check mark on led matrix to confirm wifi conncection
-    char c = client.read(); // reads the imput from processing
+void ClientConnected(WiFiClient client) {
+  Serial.println("Connected"); // prints that the buggy connected to Processing
+  matrix.loadFrame(wifi_check); // loads check mark on LED matrix to confirm WiFi connection
+  char c = client.read(); // reads the input from Processing
 
-    if (c == 'z'){ // If start signal received from client
-      if (distance <= 10) { // if obstical less then 10cm or greater then 2000 cm away then buggy stops, 2000 cm because if objstical close then gives inaccturae reading
-        Stop(); // stops the buggy
-        server.write("OBSTACLE\n"); // Send the char 'o' to the Processor PC to signal an obstacle in front of the buggy
-      } 
-      else {
-        DriveReference(); // calls the drive reference function
-      }
-      Serial.println("Buggy Reference Speed");
-      keepDriving = 'r'; // Buggy has been started
-    }
-
-    if (c == 'f'){ // If Stop signal received from client
-      DriveFollowing(); // stops the buggy
-      Serial.println("Buggy Following");
-      keepDriving = 'f'; // Buggy has been stopped
-    }
-
-    if (c == 's'){ // If Stop signal received from client
+  if (c == 'z') { // If start signal received from client
+    if (distance <= 10) { // if obstacle is less than 10cm away
       Stop(); // stops the buggy
-      Serial.println("Buggy Stopped");
-      keepDriving = 's'; // Buggy has been stopped
+      server2.write("OBSTACLE\n"); // Signal obstacle to Processing
+    } 
+    else {
+      DriveReference(); // calls the drive reference function
     }
+    Serial.println("Buggy Reference Speed");
+    keepDriving = 'r'; // Buggy has been started
+  }
 
-    if (c == 'r'){ // If Reset signal received from client
-      distance_traveled = 0; //resets distance to 0;
-      Serial.println("Distance Traveled Reset");
-    }
+  if (c == 'f') { // If following signal received from client
+    DriveFollowing(); // drive in following mode
+    Serial.println("Buggy Following");
+    keepDriving = 'f';
+  }
+
+  if (c == 's') { // If stop signal received from client
+    Stop(); // stops the buggy
+    Serial.println("Buggy Stopped");
+    keepDriving = 's';
+  }
+
+  if (c == 'r') { // If reset signal received from client
+    distance_traveled = 0; // resets distance to 0
+    Serial.println("Distance Traveled Reset");
+  }
 }
 
-void RefSpeedInput(WiFiClient client4){
+void RefSpeedInput(WiFiClient client4) {
   char s = client4.read();
   speedRef = (int)s;
+  Serial.print("speedRef: ");
   Serial.println(speedRef);
 }
 
-void processingDistance(double distance){
-  int dist = distance*10; //converts double distance to intiger
-  WiFiClient client2 = server2.available(); //checks if server avaliable to send to
-  j = (char) dist; //converts the intiger to a character
-  server2.write(j); // sends the caracter to processing to be decoded
+void processingDistance(double distance) {
+  int dist = distance * 10; // converts double distance to integer
+  WiFiClient client2 = server2.available(); // checks if server available to send to
+  j = (char) dist; // converts the integer to a character
+  server2.write(j); // sends the character to Processing
 }
 
-void processingSpeed(double Speed){
-  int s = Speed*10; //converts double distance to intiger
-  WiFiClient client3 = server3.available(); //checks if server avaliable to send to
-  q = (char) s; //converts the intiger to a character
-  server3.write(q); // sends the caracter to processing to be decoded
+void processingSpeed(double Speed) {
+  int s = Speed * 10; // converts double speed to integer
+  WiFiClient client3 = server3.available(); // checks if server available to send to
+  q = (char) s; // converts the integer to a character
+  server3.write(q); // sends the character to Processing
 }

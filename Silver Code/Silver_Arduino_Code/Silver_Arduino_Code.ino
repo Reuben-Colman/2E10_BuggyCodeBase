@@ -105,6 +105,7 @@ void setup() {
   Serial.println(ip);
   server.begin(); // Tells server to listen for incoming connections
   server2.begin();
+  server3.begin();
   matrix.begin(); // initialises the led matrix
 }
 

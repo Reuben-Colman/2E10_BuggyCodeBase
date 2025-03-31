@@ -119,7 +119,7 @@ void mousePressed() {
   if (resetDistanceBtn.isOver()) { //reset button logic
     distanceTraveled = 0.0; //sets processing distance traveled to 0;
     distance = 0; //sets processing distance to 0;
-    myClient.write("r"); // sends reset code to arduino to reset distance traveled
+    myClient.write("r\n"); // sends reset code to arduino to reset distance traveled
     println("Distance reset");
   }
 }

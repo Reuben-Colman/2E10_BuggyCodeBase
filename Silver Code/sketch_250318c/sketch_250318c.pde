@@ -4,6 +4,7 @@ import processing.net.*;
 Client myClient;
 Client myClient2;
 Client myClient3;
+Client myClient4;
 
 // UI Components
 ToggleSwitch threeWaySwitch;
@@ -19,7 +20,7 @@ int timeSinceObstacle;
 int distance = 0;
 int speed = 0;  // Changed to proper case
 int lastPosition = -1;
-String IP = "192.168.177.149";
+String IP = "192.168.62.149";
 
 void setup() {
   size(500, 700);
@@ -41,6 +42,7 @@ void setup() {
   myClient = new Client(this, IP, 5200);
   myClient2 = new Client(this, IP, 5800);
   myClient3 = new Client(this, IP, 6000);
+  myClient4 = new Client(this, IP, 6200);
 }
 
 void draw() {
@@ -82,14 +84,7 @@ void handleNetworkData() {
   
   // Handle speed data - FIXED SECTION
   while(myClient3.available() > 0) {
-    String speedData = myClient3.readStringUntil('\n');
-    if (speedData != null) {
-      try {
-        speed = int(speedData.trim());
-      } catch (Exception e) {
-        println("Error parsing speed data: " + speedData);
-      }
-    }
+    speed = myClient3.readChar();
   }
   
   timeSinceObstacle = millis() - timeWhenObstacle;
@@ -106,6 +101,9 @@ void handleSwitchPosition() {
       case ToggleSwitch.FOLLOWING:
         command = "f\n";
         break;
+      case ToggleSwitch.OFF:
+        command = "s\n";
+        break;
     }
     
     if (myClient.active()) {
@@ -117,7 +115,7 @@ void handleSwitchPosition() {
   
   // Continuous speed updates
   if (threeWaySwitch.currentPosition == ToggleSwitch.DRIVING) {
-    speedInput.sendSpeedCommand();
+    speedInput.sendSpeedCommand(speed);
   }
 }
 
@@ -268,7 +266,7 @@ class NumberInput {
         inputText = str(value);
       }
       
-      sendSpeedCommand();
+      sendSpeedCommand(speed);
     } 
     catch (Exception e) {
       value = 0.0;
@@ -276,10 +274,11 @@ class NumberInput {
     }
   }
 
-  private void sendSpeedCommand() {
+  private void sendSpeedCommand(int speed) {
     if (myClient.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
-      String command = "z" + nf(value, 1, 1) + "\n";
+      String command = "z\n";
       myClient.write(command);
+      myClient4.write(speed);
       println("Sent speed: " + command.trim());
     }
   }
