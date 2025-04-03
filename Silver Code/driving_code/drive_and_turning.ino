@@ -2,7 +2,7 @@ const int truningSpeed = 255; // speed while turning
 const int highSpeed = 130;    // speed while going forward
   
 void DrivingStatus() {
-  Serial.println("Driving Status Called");
+  //Serial.println("Driving Status Called");
   if (keepDriving == 'z') {  // Keep driving if previously driving
     if (distance <= 10) { // if ultrasonic measures object is less than 10 cm away
       Stop(); // stops the buggy
@@ -17,6 +17,7 @@ void DrivingStatus() {
   }
   else { // if keepDriving is not active
     Stop(); // stops the buggy
+    //Serial.println("Stop Called");
   }
 
   matrix.loadFrame(wifi_x); // displays x on the LED matrix, as client is not currently connected
@@ -50,7 +51,6 @@ void TurnLeft() { // reverses the right motor to orient buggy to the left
 }
 
 void Stop() { // Stops all motors
-  Serial.println("Stop Called");
   analogWrite(RM1, 0); 
   analogWrite(RM2, 0); 
 

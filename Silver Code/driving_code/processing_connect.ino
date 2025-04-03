@@ -17,7 +17,7 @@ void ClientConnected(WiFiClient client) {
       DriveReference(); // calls the drive reference function
     }
     Serial.println("Buggy Reference Speed");
-    keepDriving = 'r'; // Buggy has been started
+    keepDriving = 'z'; // Buggy has been started
   }
 
   if (c == 'f') { // If following signal received from client
@@ -39,10 +39,13 @@ void ClientConnected(WiFiClient client) {
 }
 
 void RefSpeedInput(WiFiClient client4) {
-  char s = client4.read();
-  speedRef = (int)s;
-  Serial.print("speedRef: ");
-  Serial.println(speedRef);
+  if (client4.available()) {
+    String speedStr = client4.readStringUntil('\n');
+    speedStr.trim();
+    speedRef = speedStr.toInt();
+    //Serial.print("Received speedRef: ");
+    //Serial.println(speedRef);
+  }
 }
 
 void processingDistance(double distance) {

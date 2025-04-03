@@ -1,7 +1,8 @@
 void DriveReference() {
-  Serial.println("DRiving Reference Called");
-  int speedRefNom;
+  //Serial.println("Driving Reference Called");
+  Serial.println(speedRef);
   speedRefNom = (speedRef / 50) * 255;
+  Serial.print("SpeedRefNom: ");
   Serial.println(speedRefNom);
 
   LEYE_Status = digitalRead(LEYE); // Store current status of Left IR Sensor

@@ -15,8 +15,8 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
     0x90108204
 };
 
-char ssid[] = "A15";       // WiFi Name
-char pass[] = "sean1234";  // WiFi password
+char ssid[] = "VODAFONE-0784";       // WiFi Name
+char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
 
 // Buggy Distance Traveled Variables
 double distance_traveled = 0; // global variable, distance traveled
@@ -25,7 +25,7 @@ char q;
 double EncoderSpeed = 0; // buggy speed as measured by encoders
 
 int speedFollow = 0;
-int speedRef = 5; // cm/s
+int speedRef; // cm/s
 // Removed stray constrain(speedRef, 0, 50);
 
 // PID Tracking Variables
@@ -64,39 +64,60 @@ const int trigPin = 11; // Trig Pin for Ultrasonic Sensor
 const int RENC = 1; // Right Encoder Pin
 const int LENC = 0; // Left Encoder Pin
 
-volatile int pulseCount = 0; // Stores encoder pulse count
+// Encoders
+volatile int pulseCountSpeed = 0; // Stores encoder pulse count for distance
+volatile long pulseCountDist  = 0;
 unsigned long lastSpeedTime = 0;
 unsigned long lastDistTime = 0;
 
 const float distancePulse = (2 * 3.1416 * 0.65/2) / 8;
 
-char keepDriving = 'z'; // Use character literal instead of string literal
+//-------------------
+char keepDriving = 's'; // Use character literal instead of string literal
+int speedRefNom;
 
+// Ultrasonic
 long duration; // Length of time for ultrasonic ping to return
 int distance = 0; // Distance from buggy to obstacle
 
+// IR Sensors
 int LEYE_Status; // declared globally; will be updated in functions
 int REYE_Status;
 
-WiFiServer server(5200); // Creating Server1, for commands
+// Wifi
+WiFiServer server(5200); // Creating Server1, for commands e.g. z, s, f, r
 WiFiServer server2(5800); // Creating Server2, for obstacle detection
 WiFiServer server3(6000); // Creating Server3, for speed relayed back
 WiFiServer server4(6200); // Creating Server4, for speed input for reference speed
+IPAddress ip;
 
 void setup() {
   Serial.begin(9600);
+
+  // Encoders 
+  pinMode(LENC, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(LENC), encoderISR, RISING);
+
+  // Motors
   pinMode(LM2, OUTPUT); // Set Left Motor pin 2 as output
   pinMode(LM1, OUTPUT); // Set Left Motor pin 1 as output
   pinMode(RM1, OUTPUT); // Set Right Motor pin 1 as output
   pinMode(RM2, OUTPUT); // Set Right Motor pin 2 as output
-  pinMode(LEYE, INPUT); // Set Left IR Sensor as input
-  pinMode(REYE, INPUT); // Set Right IR Sensor as input
+
   digitalWrite(LM2, LOW); // Set Left Motor Logic pin 2 to low
   digitalWrite(LM1, LOW); // Set Left Motor Logic pin 1 to low
   digitalWrite(RM1, LOW); // Set Right Motor Logic pin 1 to low
   digitalWrite(RM2, LOW); // Set Right Motor Logic pin 2 to low
+
+  // IR Sensors
+  pinMode(LEYE, INPUT); // Set Left IR Sensor as input
+  pinMode(REYE, INPUT); // Set Right IR Sensor as input
+
+  // Ultrasonic Sensor
   pinMode(trigPin, OUTPUT); // trigPin OUTPUT
   pinMode(echoPin, INPUT);  // echoPin INPUT
+
+  // Wifi
   WiFi.begin(ssid, pass);   // Initialize the WiFi library's network settings
   IPAddress ip = WiFi.localIP(); // IP Address of Arduino
   Serial.print("IP Address:");
@@ -105,13 +126,19 @@ void setup() {
   server2.begin();
   server3.begin();
   server4.begin();
+
   matrix.begin();  // Initializes the LED matrix
 }
 
 void loop() {
+  Serial.println("----------- NEW LOOP ----------");
   distance = Ultrasonic(); // call ultrasonic to get distance to object
-  Serial.print("Distance: ");
-  Serial.println(distance);
+  //Serial.print("Distance: ");
+  //Serial.println(distance);
+  WiFiClient client4 = server4.available(); // Arduino server available to connect
+  if (client4.connected()) { // if the client sends data to Arduino
+    RefSpeedInput(client4); // run the client connection function 
+  }
 
   WiFiClient client1 = server.available(); // Arduino server available to connect
   if (client1.connected()) { // if the client sends data to Arduino
@@ -121,13 +148,11 @@ void loop() {
     DrivingStatus();
   }
 
-  WiFiClient client4 = server4.available(); // Arduino server available to connect
-  if (client4.connected()) { // if the client sends data to Arduino
-    RefSpeedInput(client4); // run the client connection function 
-  }
-  Serial.println(keepDriving);
+  
+  //Serial.println(keepDriving);
   encoderSpeed();
   encoderDistance();
   processingDistance(distance_traveled); // Sends distance traveled to Processing
   processingSpeed(EncoderSpeed); // Missing semicolon added
+  //Serial.println(WiFi.localIP());
 }

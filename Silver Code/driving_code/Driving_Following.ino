@@ -1,5 +1,5 @@
 void DriveFollowing() {
-  Serial.println("DRiving Following Called");
+  Serial.println("Driving Following Called");
   int speedFollow = computeFollowPID(distance);
   LEYE_Status = digitalRead(LEYE); // Store current status of Left IR Sensor
   REYE_Status = digitalRead(REYE); // Store current status of Right IR Sensor
