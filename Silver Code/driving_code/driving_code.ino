@@ -52,11 +52,11 @@ double inputF, outputF, setPointF = 10.0; // Set a reference distance for follow
 const int REYE = 13; // Right IR Sensor pin 
 const int LEYE = 12; // Left IR Sensor pin
 
-const int LM1 = 5; // Left Motor Pin 1
-const int LM2 = 9; // Left Motor Pin 2
+const int LM1 = 9; // Left Motor Pin 1
+const int LM2 = 5; // Left Motor Pin 2
 
-const int RM1 = 3; // Right Motor Pin 1
-const int RM2 = 6; // Right Motor Pin 2
+const int RM1 = 6; // Right Motor Pin 1
+const int RM2 = 3; // Right Motor Pin 2
 
 const int echoPin = 4; // Echo Pin for Ultrasonic Sensor
 const int trigPin = 11; // Trig Pin for Ultrasonic Sensor

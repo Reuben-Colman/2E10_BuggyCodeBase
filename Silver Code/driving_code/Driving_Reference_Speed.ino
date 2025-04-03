@@ -1,7 +1,9 @@
 void DriveReference() {
   //Serial.println("Driving Reference Called");
+  Serial.println("SpeedRef: ");
   Serial.println(speedRef);
-  speedRefNom = (speedRef / 50) * 255;
+  speedRefNom = ((float)speedRef / 50) * 255 + 50;
+  speedRefNom = constrain(speedRefNom, 0, 255);
   Serial.print("SpeedRefNom: ");
   Serial.println(speedRefNom);
 

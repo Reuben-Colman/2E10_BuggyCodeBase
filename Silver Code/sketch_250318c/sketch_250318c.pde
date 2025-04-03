@@ -20,7 +20,7 @@ int timeSinceObstacle;
 int distance = 0;
 int speed = 0;  // Changed to proper case
 int lastPosition = -1;
-String IP = "192.168.62.149";
+String IP = "192.168.1.37";
 
 void setup() {
   size(500, 700);
@@ -39,10 +39,10 @@ void setup() {
   textFont(font);
   
   // Network connections
-  myClient = new Client(this, IP, 5200);
-  myClient2 = new Client(this, IP, 5800);
-  myClient3 = new Client(this, IP, 6000);
-  myClient4 = new Client(this, IP, 6200);
+  myClient = new Client(this, IP, 5200); // sending commands
+  myClient2 = new Client(this, IP, 5800); // recieving obsticle detected and distance
+  myClient3 = new Client(this, IP, 6000); // recieving current speed
+  myClient4 = new Client(this, IP, 6200); // Sent Speed
 }
 
 void draw() {
@@ -96,7 +96,7 @@ void handleSwitchPosition() {
     
     switch(threeWaySwitch.currentPosition) {
       case ToggleSwitch.DRIVING:
-        command = "z" + nf(speedInput.value, 1, 1) + "\n";
+        command = "z\n";
         break;
       case ToggleSwitch.FOLLOWING:
         command = "f\n";
@@ -106,16 +106,27 @@ void handleSwitchPosition() {
         break;
     }
     
-    if (myClient.active()) {
-      myClient.write(command);
-      println("Sent: " + command.trim());
+     if (myClient != null && myClient.active()) {
+            myClient.write(command);
+            println("Sent: " + command.trim());
+        } else {
+            println("Command client not connected. Unable to send command.");
+        }
+
+        if (myClient4 != null && myClient4.active()) {
+            myClient4.write(speedInput.inputText + "\n");
+            println("Sent speed: " + speedInput.inputText.trim());
+        } else {
+            println("Speed client not connected. Unable to send speed.");
+        }
+
+        lastPosition = threeWaySwitch.currentPosition;
     }
-    lastPosition = threeWaySwitch.currentPosition;
-  }
   
-  // Continuous speed updates
+  // Continuous speed updates when in DRIVING mode
   if (threeWaySwitch.currentPosition == ToggleSwitch.DRIVING) {
-    speedInput.sendSpeedCommand(speed);
+    // Removed the parameter since sendSpeedCommand now uses the instance value.
+    speedInput.sendSpeedCommand();
   }
 }
 
@@ -261,27 +272,31 @@ class NumberInput {
       
       value = constrain(float(inputText), 0, 100.0);
       
-      // If no decimal, add .0
+      // If no decimal, add .0 for consistency
       if (inputText.indexOf('.') == -1 && !inputText.isEmpty()) {
         inputText = str(value);
       }
       
-      sendSpeedCommand(speed);
+      // Now send the updated speed command
+      sendSpeedCommand();
     } 
     catch (Exception e) {
       value = 0.0;
       inputText = "";
+      println("Error sending data: " + e.getMessage());
     }
   }
 
-  private void sendSpeedCommand(int speed) {
-    if (myClient.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
-      String command = "z\n";
-      myClient.write(command);
-      myClient4.write(speed);
-      println("Sent speed: " + command.trim());
-    }
+  // Modified: removed the parameter so that the method uses the instance variable value
+  private void sendSpeedCommand() {
+  if (myClient4.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
+    // Convert the speed value to a string with a newline appended
+    String speedCommand = str(value) + "\n";
+    // Send the speed value over client4 only
+    myClient4.write(speedCommand);
+    println("Sent speed: " + speedCommand.trim());
   }
+}
 }
 
 

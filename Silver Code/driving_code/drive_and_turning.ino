@@ -1,5 +1,5 @@
-const int truningSpeed = 255; // speed while turning
-const int highSpeed = 130;    // speed while going forward
+const int truningSpeed = 180; // speed while turning
+//const int highSpeed = 130;    // speed while going forward
   
 void DrivingStatus() {
   //Serial.println("Driving Status Called");
@@ -24,7 +24,8 @@ void DrivingStatus() {
 }
 
 void foward(int FowardSpeed) { // drives both motors forward
-  Serial.println("Foward Called");
+  Serial.print("Foward Called, Speed: ");
+  Serial.println(FowardSpeed);
   analogWrite(RM1, FowardSpeed); 
   analogWrite(RM2, 0); 
 
