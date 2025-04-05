@@ -24,8 +24,8 @@ void DrivingStatus() {
 }
 
 void foward(int FowardSpeed) { // drives both motors forward
-  Serial.print("Foward Called, Speed: ");
-  Serial.println(FowardSpeed);
+  //Serial.print("Foward Called, Speed: ");
+  //Serial.println(FowardSpeed);
 
   analogWrite(RM1, 0); 
   analogWrite(RM2, FowardSpeed); 
@@ -35,7 +35,7 @@ void foward(int FowardSpeed) { // drives both motors forward
 }
 
 void TurnRight() { // reverses the left motor to orient buggy to the right
-  Serial.println("Turn Right Called");
+  //Serial.println("Turn Right Called");
 
   analogWrite(RM1, 0); 
   analogWrite(RM2, 0);
@@ -45,7 +45,7 @@ void TurnRight() { // reverses the left motor to orient buggy to the right
 }
 
 void TurnLeft() { // reverses the right motor to orient buggy to the left
-  Serial.println("Turn Left Called");
+  //Serial.println("Turn Left Called");
 
   analogWrite(RM1, 0); 
   analogWrite(RM2, truningSpeed); 

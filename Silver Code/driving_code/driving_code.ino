@@ -69,6 +69,7 @@ volatile int pulseCountSpeed = 0; // Stores encoder pulse count for distance
 volatile long pulseCountDist  = 0;
 unsigned long lastSpeedTime = 0;
 unsigned long lastDistTime = 0;
+unsigned long lastTimeSpeedCheck = 0;
 
 const float distancePulse = (2 * 3.1416 * 0.65/2) / 8;
 
@@ -119,10 +120,10 @@ void setup() {
 
   // Wifi
   WiFi.begin(ssid, pass);   // Initialize the WiFi library's network settings
-  if(Serial.println(WiFi.localIP()) != "0.0.0.0"){
-    Serial.print("IP Address:");
-    Serial.println(WiFi.localIP());
-  }
+
+  Serial.print("IP Address:");
+  Serial.println(WiFi.localIP());
+
   server.begin();  // Tells server to listen for incoming connections
   server2.begin();
   server3.begin();
