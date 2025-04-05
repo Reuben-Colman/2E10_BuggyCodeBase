@@ -221,8 +221,8 @@ class NumberInput {
     strokeWeight(hasFocus ? 2 : 1);
     rect(x, y, width, height, 5);
     
-    // Display text
-    String displayText = hasFocus ? inputText : nf(value, 1, 1); // Fixed decimal formatting
+    // Display text: if in focus, show raw input; otherwise show formatted value
+    String displayText = hasFocus ? inputText : nf(value, 1, 1);
     fill(#333333);
     textSize(height * 0.6);
     textAlign(CENTER, CENTER);
@@ -235,9 +235,10 @@ class NumberInput {
     if (mouseX > x && mouseX < x + width && 
         mouseY > y && mouseY < y + height) {
       hasFocus = true;
-      inputText = ""; // Clear on click
+      // Optionally, clear inputText here if desired:
+      // inputText = "";
     } else {
-      updateValueFromInput();
+      updateValueFromInput(); // Update value when focus is lost
       hasFocus = false;
     }
   }
@@ -248,36 +249,33 @@ class NumberInput {
         inputText = inputText.substring(0, inputText.length()-1);
       } 
       else if (key == ENTER || key == RETURN) {
-        updateValueFromInput();
+        updateValueFromInput(); // Finalize input on ENTER
         hasFocus = false;
       }
       else if (Character.isDigit(key) || (key == '.' && inputText.indexOf('.') == -1)) {
         inputText += key;
-        // Update value as we type
-        updateValueFromInput();
+        // Do not call updateValueFromInput() here so the raw text is preserved.
       }
     }
   }
 
+  // Call this method when the input is finalized (on ENTER or losing focus)
   private void updateValueFromInput() {
     try {
-      // Handle numbers starting with decimal
       if (inputText.startsWith(".")) inputText = "0" + inputText;
       
-      // Handle empty input
       if (inputText.isEmpty()) {
         value = 0.0;
         return;
       }
       
-      value = constrain(float(inputText), 0, 100.0);
+      // Convert inputText to a float and constrain it to the desired range
+      value = constrain(float(inputText), 0, 50.0);
       
-      // If no decimal, add .0 for consistency
-      if (inputText.indexOf('.') == -1 && !inputText.isEmpty()) {
-        inputText = str(value);
-      }
+      // Optionally update inputText to a formatted string when finished
+      inputText = str(value);
       
-      // Now send the updated speed command
+      // Now send the updated speed command to the Arduino
       sendSpeedCommand();
     } 
     catch (Exception e) {
@@ -287,17 +285,16 @@ class NumberInput {
     }
   }
 
-  // Modified: removed the parameter so that the method uses the instance variable value
+  // Sends the finalized speed value over client4 to the Arduino
   private void sendSpeedCommand() {
-  if (myClient4.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
-    // Convert the speed value to a string with a newline appended
-    String speedCommand = str(value) + "\n";
-    // Send the speed value over client4 only
-    myClient4.write(speedCommand);
-    println("Sent speed: " + speedCommand.trim());
+    if (myClient4.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
+      String speedCommand = str(value) + "\n";
+      myClient4.write(speedCommand);
+      println("Sent speed: " + speedCommand.trim());
+    }
   }
 }
-}
+
 
 
 // Keep the existing implementations for:

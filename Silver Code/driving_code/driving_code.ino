@@ -89,7 +89,7 @@ WiFiServer server(5200); // Creating Server1, for commands e.g. z, s, f, r
 WiFiServer server2(5800); // Creating Server2, for obstacle detection
 WiFiServer server3(6000); // Creating Server3, for speed relayed back
 WiFiServer server4(6200); // Creating Server4, for speed input for reference speed
-IPAddress ip;
+
 
 void setup() {
   Serial.begin(9600);
@@ -119,9 +119,10 @@ void setup() {
 
   // Wifi
   WiFi.begin(ssid, pass);   // Initialize the WiFi library's network settings
-  IPAddress ip = WiFi.localIP(); // IP Address of Arduino
-  Serial.print("IP Address:");
-  Serial.println(WiFi.localIP());
+  if(Serial.println(WiFi.localIP()) != "0.0.0.0"){
+    Serial.print("IP Address:");
+    Serial.println(WiFi.localIP());
+  }
   server.begin();  // Tells server to listen for incoming connections
   server2.begin();
   server3.begin();
