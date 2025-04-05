@@ -1,4 +1,4 @@
-const int truningSpeed = 180; // speed while turning
+const int truningSpeed = 130; // speed while turning
 //const int highSpeed = 130;    // speed while going forward
   
 void DrivingStatus() {

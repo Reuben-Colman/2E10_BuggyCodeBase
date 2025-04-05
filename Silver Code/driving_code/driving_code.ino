@@ -15,8 +15,8 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
     0x90108204
 };
 
-char ssid[] = "VODAFONE-0784";       // WiFi Name
-char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
+char ssid[] = "VODAFONE-5C78";       // WiFi Name
+char pass[] = "9F34MP2P2FJ4K3BD";  // WiFi password
 
 // Buggy Distance Traveled Variables
 double distance_traveled = 0; // global variable, distance traveled
@@ -121,7 +121,7 @@ void setup() {
   WiFi.begin(ssid, pass);   // Initialize the WiFi library's network settings
   IPAddress ip = WiFi.localIP(); // IP Address of Arduino
   Serial.print("IP Address:");
-  Serial.println(ip);
+  Serial.println(WiFi.localIP());
   server.begin();  // Tells server to listen for incoming connections
   server2.begin();
   server3.begin();
@@ -131,7 +131,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("----------- NEW LOOP ----------");
+  //Serial.println("----------- NEW LOOP ----------");
   distance = Ultrasonic(); // call ultrasonic to get distance to object
   //Serial.print("Distance: ");
   //Serial.println(distance);

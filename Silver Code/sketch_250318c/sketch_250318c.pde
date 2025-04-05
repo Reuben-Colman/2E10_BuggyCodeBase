@@ -20,7 +20,7 @@ int timeSinceObstacle;
 int distance = 0;
 int speed = 0;  // Changed to proper case
 int lastPosition = -1;
-String IP = "192.168.1.37";
+String IP = "192.168.1.13";
 
 void setup() {
   size(500, 700);
