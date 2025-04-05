@@ -40,9 +40,8 @@ void ClientConnected(WiFiClient client) {
 
 void RefSpeedInput(WiFiClient client4) {
   if (client4.available()) {
-    String speedStr = client4.readStringUntil('\n');
-    speedStr.trim();
-    speedRef = speedStr.toInt();
+    char speedChar = client4.read();
+    speedRef = (int) speedChar;
     //Serial.print("Received speedRef: ");
     //Serial.println(speedRef);
   }

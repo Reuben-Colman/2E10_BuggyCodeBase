@@ -119,7 +119,7 @@ void setup() {
 
   // Wifi
   WiFi.begin(ssid, pass);   // Initialize the WiFi library's network settings
-  if(Serial.println(WiFi.localIP()) != "0.0.0.0"){
+  if(WiFi.localIP() != "0.0.0.0"){
     Serial.print("IP Address:");
     Serial.println(WiFi.localIP());
   }

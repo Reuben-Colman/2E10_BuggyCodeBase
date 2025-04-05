@@ -288,9 +288,9 @@ class NumberInput {
   // Sends the finalized speed value over client4 to the Arduino
   private void sendSpeedCommand() {
     if (myClient4.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
-      String speedCommand = str(value) + "\n";
+      char speedCommand = (char)value;
       myClient4.write(speedCommand);
-      println("Sent speed: " + speedCommand.trim());
+      println("Sent speed: " + speedCommand);
     }
   }
 }
