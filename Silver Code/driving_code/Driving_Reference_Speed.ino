@@ -1,16 +1,15 @@
 void DriveReference() {
   //Serial.println("Driving Reference Called");
-  Serial.print("SpeedRef: ");
-  Serial.println(speedRef);
+  //Serial.print("SpeedRef: ");
+  //Serial.println(speedRef);
 
-  speedRefNom = ((float)speedRef / 50) * 255;
   speedRefNom = constrain(speedRefNom, 0, 255);
 
-  Serial.print("SpeedRefNom: ");
-  Serial.println(speedRefNom);
+  //Serial.print("SpeedRefNom: ");
+  //Serial.println(speedRefNom);
 
-  Serial.print("SpeedRefAfter: ");
-  Serial.println(speedRefNom);
+  //Serial.print("SpeedRefAfter: ");
+  //Serial.println(speedRefNom);
 
   LEYE_Status = digitalRead(LEYE); // Store current status of Left IR Sensor
   REYE_Status = digitalRead(REYE); // Store current status of Right IR Sensor
@@ -35,29 +34,44 @@ void speedCheck(){
   unsigned long currentTimeSpeedCheck = millis();
   if(currentTimeSpeedCheck - lastTimeSpeedCheck >= 1500){ // checks speed every 1.5 seconds
     encoderSpeed();
-    Serial.print("SpeedRefBefore: ");
+    Serial.println("------- Speed Check -------");
+    Serial.print("SpeedRef: ");
+    Serial.println(speedRef);
+    Serial.print("SpeedRefNomBefore: ");
     Serial.println(speedRefNom);
     Serial.print("Encoder Speed: ");
     Serial.println(EncoderSpeed*10);
 
     if(speedRef - EncoderSpeed*10 > 0){ // if the buggy speed is slower the the desired speed
+      Serial.println("Buggy Speed Slower then Specified");
+      Serial.println(speedRef - EncoderSpeed*10);
       if(speedRef - EncoderSpeed*10 >= 5){ // if the buggy speed is slower the the desired speed by 10 cm or more
         speedRefNom = speedRefNom + 10;
+        lastTimeSpeedCheck = currentTimeSpeedCheck;
+        return;
       }
-      if(speedRef - EncoderSpeed*10 < 5){ // if the buggy speed is slower the the desired speed by less then 10cm
+      else if(speedRef - EncoderSpeed*10 < 5){ // if the buggy speed is slower the the desired speed by less then 10cm
         speedRefNom = speedRefNom + 1;
+        lastTimeSpeedCheck = currentTimeSpeedCheck;
+        return;
       }
     }
 
     if(speedRef - EncoderSpeed*10 < -0.99){ // if the buggy speed is faster the the desired speed
+      Serial.println("Buggy Speed Faster then Specified");
       if(speedRef - EncoderSpeed*10 <= -5){ // if the buggy speed is slower the the desired speed by 10 cm or more
         speedRefNom = speedRefNom - 10;
+        lastTimeSpeedCheck = currentTimeSpeedCheck;
+        return;
       }
-      if(speedRef - EncoderSpeed*10 > -5){ // if the buggy speed is slower the the desired speed by less then 10cm
+      else if(speedRef - EncoderSpeed*10 > -5){ // if the buggy speed is slower the the desired speed by less then 10cm
         speedRefNom = speedRefNom - 1;
+        lastTimeSpeedCheck = currentTimeSpeedCheck;
+        return;
       }
     }
 
-    lastTimeSpeedCheck = currentTimeSpeedCheck;
+    Serial.print("SpeedRefNomAfter: ");
+    Serial.println(speedRefNom);
   }
 }

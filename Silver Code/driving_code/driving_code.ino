@@ -70,7 +70,7 @@ volatile int pulseCountSpeed = 0; // Stores encoder pulse count for distance
 volatile long pulseCountDist  = 0;
 unsigned long lastSpeedTime = 0;
 unsigned long lastDistTime = 0;
-unsigned long lastTimeSpeedCheck = 0;
+unsigned long lastTimeSpeedCheck;
 
 const float distancePulse = (2 * 3.1416 * 0.65/2) / 8;
 

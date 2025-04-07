@@ -115,8 +115,9 @@ void handleSwitchPosition() {
     
     // Also send the current speed if the switch changes, in case it needs updating.
     if (myClient4 != null && myClient4.active() && speedInput.hasFinalizedValue()) {
-      myClient4.write(speedInput.getFinalizedSpeed());
-      println("Sent speed: " + speedInput.getFinalizedSpeed());
+      speedInput.sendSpeedCommand();
+      //myClient4.write(speedInput.getFinalizedSpeed());
+      //println("Sent speed: " + speedInput.getFinalizedSpeed());
     } else {
       println("Speed client not connected. Unable to send speed.");
     }

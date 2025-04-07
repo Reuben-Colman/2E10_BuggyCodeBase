@@ -42,6 +42,7 @@ void RefSpeedInput(WiFiClient client4) {
   if (client4.available()) {
     char speedChar = client4.read();
     speedRef = (int) speedChar;
+    speedRefNom = ((float)speedRef / 50) * 255;
     Serial.print("Received speedRef: ");
     Serial.println(speedRef);
   }
