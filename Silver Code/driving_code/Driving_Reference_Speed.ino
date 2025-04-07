@@ -1,13 +1,16 @@
 void DriveReference() {
   //Serial.println("Driving Reference Called");
-  //Serial.print("SpeedRef: ");
-  //Serial.println(speedRef);
+  Serial.print("SpeedRef: ");
+  Serial.println(speedRef);
 
   speedRefNom = ((float)speedRef / 50) * 255;
   speedRefNom = constrain(speedRefNom, 0, 255);
 
-  //Serial.print("SpeedRefNom: ");
-  //Serial.println(speedRefNom);
+  Serial.print("SpeedRefNom: ");
+  Serial.println(speedRefNom);
+
+  Serial.print("SpeedRefAfter: ");
+  Serial.println(speedRefNom);
 
   LEYE_Status = digitalRead(LEYE); // Store current status of Left IR Sensor
   REYE_Status = digitalRead(REYE); // Store current status of Right IR Sensor
@@ -30,7 +33,7 @@ void DriveReference() {
 
 void speedCheck(){
   unsigned long currentTimeSpeedCheck = millis();
-  if(currentTimeSpeedCheck - lastTimeSpeedCheck >= 3000){ // checks speed every second
+  if(currentTimeSpeedCheck - lastTimeSpeedCheck >= 1500){ // checks speed every 1.5 seconds
     encoderSpeed();
     Serial.print("SpeedRefBefore: ");
     Serial.println(speedRefNom);
@@ -56,7 +59,5 @@ void speedCheck(){
     }
 
     lastTimeSpeedCheck = currentTimeSpeedCheck;
-    Serial.print("SpeedRefAfter: ");
-    Serial.println(speedRefNom);
   }
 }

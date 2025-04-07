@@ -1,5 +1,4 @@
-const int truningSpeed = 130; // speed while turning
-//const int highSpeed = 130;    // speed while going forward
+const int truningSpeed = 170; // speed while turning
   
 void DrivingStatus() {
   //Serial.println("Driving Status Called");

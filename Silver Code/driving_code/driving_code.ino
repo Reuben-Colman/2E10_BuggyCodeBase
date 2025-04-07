@@ -15,8 +15,8 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
     0x90108204
 };
 
-char ssid[] = "VODAFONE-5C78";       // WiFi Name
-char pass[] = "9F34MP2P2FJ4K3BD";  // WiFi password
+char ssid[] = "VODAFONE-0784";       // WiFi Name
+char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
 
 // Buggy Distance Traveled Variables
 double distance_traveled = 0; // global variable, distance traveled
@@ -25,7 +25,7 @@ char q;
 double EncoderSpeed = 0; // buggy speed as measured by encoders
 
 int speedFollow = 0;
-int speedRef; // cm/s
+int speedRef = 0; // cm/s
 // Removed stray constrain(speedRef, 0, 50);
 
 // PID Tracking Variables
@@ -38,15 +38,16 @@ double lastErrorPID = 0;
 double input, output, setPoint, last_out = 0;
 double intError = 0, devError = 0;  // initialize integral error
 
-double kpF = 3.5;
-double kiF = 0.00004;
-double kdF = 1;
+double kpF = 8;
+double kiF = 1/5;
+double kdF = 0;
+
 double kpS = 0.3; 
 double kiS = 3.5; 
 double kdS = 1.2;
 
 double inputS, outputS, setPointS = 0.0; // Initialize setPointS
-double inputF, outputF, setPointF = 10.0; // Set a reference distance for following
+double inputF, outputF, setPointF = 20; // Set a reference distance for following
 
 // Arduino PINS
 const int REYE = 13; // Right IR Sensor pin 
@@ -89,7 +90,7 @@ int REYE_Status;
 WiFiServer server(5200); // Creating Server1, for commands e.g. z, s, f, r
 WiFiServer server2(5800); // Creating Server2, for obstacle detection
 WiFiServer server3(6000); // Creating Server3, for speed relayed back
-WiFiServer server4(6200); // Creating Server4, for speed input for reference speed
+WiFiServer server4(5400); // Creating Server4, for speed input for reference speed
 
 
 void setup() {
@@ -99,6 +100,7 @@ void setup() {
   pinMode(LENC, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(LENC), encoderISR, RISING);
 
+  setPointF - 20.0;
   // Motors
   pinMode(LM2, OUTPUT); // Set Left Motor pin 2 as output
   pinMode(LM1, OUTPUT); // Set Left Motor pin 1 as output

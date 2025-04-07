@@ -42,13 +42,13 @@ void RefSpeedInput(WiFiClient client4) {
   if (client4.available()) {
     char speedChar = client4.read();
     speedRef = (int) speedChar;
-    //Serial.print("Received speedRef: ");
-    //Serial.println(speedRef);
+    Serial.print("Received speedRef: ");
+    Serial.println(speedRef);
   }
 }
 
 void processingDistance(double distance) {
-  int dist = distance * 10; // converts double distance to integer
+  int dist = distance; // converts double distance to integer
   WiFiClient client2 = server2.available(); // checks if server available to send to
   j = (char) dist; // converts the integer to a character
   server2.write(j); // sends the character to Processing

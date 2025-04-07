@@ -15,8 +15,8 @@ double computeFollowPID(double inp) {
   if (out < 0) {
     out = 0;
   }
-  if (out > 255) {
-    out = 255;
+  else if (out > 140) {
+    out = 140;
   }
 
   return out;   

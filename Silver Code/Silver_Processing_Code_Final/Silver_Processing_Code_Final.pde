@@ -20,7 +20,7 @@ int timeSinceObstacle;
 int distance = 0;
 int speed = 0;  // Changed to proper case
 int lastPosition = -1;
-String IP = "192.168.1.13";
+String IP = "192.168.1.37";
 
 void setup() {
   size(500, 700);
@@ -42,7 +42,7 @@ void setup() {
   myClient = new Client(this, IP, 5200); // sending commands
   myClient2 = new Client(this, IP, 5800); // receiving obstacle detected and distance
   myClient3 = new Client(this, IP, 6000); // receiving current speed
-  myClient4 = new Client(this, IP, 6200); // sending speed
+  myClient4 = new Client(this, IP, 5400); // sending speed
 }
 
 void draw() {
@@ -115,7 +115,7 @@ void handleSwitchPosition() {
     
     // Also send the current speed if the switch changes, in case it needs updating.
     if (myClient4 != null && myClient4.active() && speedInput.hasFinalizedValue()) {
-      myClient4.write(speedInput.getFinalizedSpeed() + "\n");
+      myClient4.write(speedInput.getFinalizedSpeed());
       println("Sent speed: " + speedInput.getFinalizedSpeed());
     } else {
       println("Speed client not connected. Unable to send speed.");
@@ -299,9 +299,9 @@ class NumberInput {
   // Sends the finalized speed value over client4 to the Arduino
   private void sendSpeedCommand() {
     if (myClient4.active() && switchRef.currentPosition == ToggleSwitch.DRIVING) {
-      String speedCommand = str(value) + "\n";
+      char speedCommand = (char)value;
       myClient4.write(speedCommand);
-      println("Sent speed: " + speedCommand.trim());
+      println("Sent speed: " + speedCommand);
     }
   }
 }
