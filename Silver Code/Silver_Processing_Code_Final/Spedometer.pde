@@ -24,12 +24,12 @@ class Speedometer {
   }
 
   void display() {
-    pushStyle(); // Save current style settings
+    pushStyle();
     drawArc();
     drawLabels();
     drawNeedle();
     drawSpeedText();
-    popStyle(); // Restore original styles
+    popStyle();
   }
 
   private void drawArc() {
@@ -54,7 +54,6 @@ class Speedometer {
     float needleAngle = map(speed, minSpeed, maxSpeed, PI, TWO_PI);
     float needleX = x + cos(needleAngle) * needleLength;
     float needleY = y + sin(needleAngle) * needleLength;
-
     stroke(needleColor);
     strokeWeight(3);
     line(x, y, needleX, needleY);

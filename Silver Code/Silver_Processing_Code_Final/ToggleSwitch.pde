@@ -1,7 +1,11 @@
 class ToggleSwitch {
+  static final int DRIVING = 0;
+  static final int OFF = 1;
+  static final int FOLLOWING = 2;
+  
   float x, y, switchWidth, switchHeight;
   color trackColor, knobColorOff, knobColorOn;
-  int currentPosition; // 0=left, 1=middle, 2=right
+  int currentPosition;
   boolean dragging = false;
   
   ToggleSwitch(float x, float y, float w, float h) {
@@ -12,52 +16,42 @@ class ToggleSwitch {
     trackColor = #CCCCCC;
     knobColorOff = #FF4444;
     knobColorOn = #00C851;
-    currentPosition = 1;
+    currentPosition = OFF;
   }
-  
+
   boolean isOver() {
     return mouseX > x && mouseX < x + switchWidth && 
            mouseY > y && mouseY < y + switchHeight;
   }
-  
+
   void handleInput() {
     if (mousePressed && isOver()) {
       dragging = true;
       float clickX = mouseX - x;
-      if (clickX < switchWidth/3) currentPosition = 0;
-      else if (clickX < 2*switchWidth/3) currentPosition = 1;
-      else currentPosition = 2;
+      if (clickX < switchWidth/3) currentPosition = DRIVING;
+      else if (clickX < 2*switchWidth/3) currentPosition = OFF;
+      else currentPosition = FOLLOWING;
     }
     if (!mousePressed) dragging = false;
   }
-  
+
   void display() {
-    // Draw track
+    // Track
     fill(trackColor);
     rect(x, y + switchHeight/4, switchWidth, switchHeight/2, 10);
     
-    // Calculate knob position
-    float knobX;
-    switch(currentPosition) {
-      case 0: knobX = x + 20; break;
-      case 1: knobX = x + switchWidth/2; break;
-      default: knobX = x + switchWidth - 20;
-    }
+    // Knob
+    float knobX = x + 20; // Default to DRIVING
+    if (currentPosition == OFF) knobX = x + switchWidth/2;
+    else if (currentPosition == FOLLOWING) knobX = x + switchWidth - 20;
     
-    // Calculate color
-    color knobColor = (currentPosition == 1) ? knobColorOff : knobColorOn;
+    color knobColor = (currentPosition == OFF) ? knobColorOff : knobColorOn;
+    if (dragging || isOver()) knobColor = lerpColor(knobColor, color(255), 0.2);
     
-    
-    // Hover effect
-    if (isOver() || dragging) {
-      knobColor = lerpColor(knobColor, color(255), 0.2);
-    }
-    
-    // Draw sliding knob
     fill(knobColor);
     rect(knobX - 15, y, 30, switchHeight, 8);
     
-    // Draw labels
+    // Labels
     fill(#666666);
     textSize(14);
     textAlign(CENTER, CENTER);

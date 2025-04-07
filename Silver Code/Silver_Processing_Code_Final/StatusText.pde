@@ -15,12 +15,12 @@ void drawStatusMessages() {
         statusText = "Status: OFF"; 
         statusColor = #FF4444;
         break;
-      case 2: statusText = 
-        "Status: FOLLOWING"; 
+      case 2: 
+        statusText = "Status: FOLLOWING"; 
         statusColor = #00C851;
         break;
-      default: statusText = 
-        "Status: UNKNOWN";
+      default: 
+        statusText = "Status: UNKNOWN";
         statusColor = #666666;
     }
   }
