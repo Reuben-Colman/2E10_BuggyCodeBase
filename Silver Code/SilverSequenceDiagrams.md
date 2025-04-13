@@ -20,7 +20,7 @@ sequenceDiagram
   Arduino ->> Encoders: What speed is the buggy traveling at?
   Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
   Arduino -->> Arduino: What is the distance traveled. 40cm!
-  Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client.
+  Arduino ->> Distance Traveled & Obsticle Client: Send the obstical detected to the client.
   Arduino ->> Buggy Speed Client: Send the current speed to the client.
 ```
 Following Command Received
@@ -70,7 +70,11 @@ sequenceDiagram
   Arduino -->> Arduino: Update keep driving to Reference
   Arduino -->> Stop Function: The distance was less then 10cm, Call
   Stop Function ->> Motors: Stop Both Motors
-  Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client
+  Arduino ->> Encoders: What speed is the buggy traveling at?
+  Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
+  Arduino -->> Arduino: What is the distance traveled. 40cm!
+  Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client .
+  Arduino ->> Buggy Speed Client: Send the current speed to the client.
 ```
 No Command Recieved but keep driving is Reference
 ```mermaid
@@ -80,10 +84,9 @@ sequenceDiagram
   Arduino ->> Command Client: Did i recieve a command?
   Command Client ->> Arduino: No
   Arduino -->> Arduino: The Status of keep driving is Reference
-
   Arduino ->> Reference Speed Client: Did i recieve a command?
   Reference Speed Client ->> Arduino: No!
-  Arduino -->> Arduino: The Refernce Speed is 5.
+  Arduino -->> Arduino: The Refernce Speed is 5 and Nominal value is 25!
   Arduino -->> Driveing Refernece Function: The distance is grater then 10cm, Call.
   Driveing Refernece Function ->> IR Sesors: Are either sensor on the white line?
   IR Sesors ->> Driveing Refernece Function: No!
@@ -97,4 +100,60 @@ sequenceDiagram
   Arduino -->> Arduino: What is the distance traveled. 40cm!
   Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client.
   Arduino ->> Buggy Speed Client: Send the current speed to the client.
+```
+
+No Command Recieved but keep driving is Following
+```mermaid
+sequenceDiagram
+  Arduino ->> Ultrasonic Sensor: What is the distance to the next Obstacle?
+  Ultrasonic Sensor ->> Arduino: It is 40cm 
+  Arduino ->> Command Client: Did i recieve a command?
+  Command Client ->> Arduino: No
+  Arduino -->> Arduino: The Status of keep driving is Following!
+  Arduino -->> Driving Following Function: Call!
+  Driving Following Function -->> PID: Call!
+  PID -->> PID: What speed should I to go to make the distance 20cm? 130!
+  Driving Following Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Driving Following Function: No!
+  Driving Following Function ->> Motors: Both Motors go foward, at PID value.
+  Arduino ->> Encoders: What speed is the buggy traveling at?
+  Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
+  Arduino -->> Arduino: What is the distance traveled. 40cm!
+  Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client.
+  Arduino ->> Buggy Speed Client: Send the current speed to the client.
+```
+No Command Recieved but keep driving is Stop
+```mermaid
+sequenceDiagram
+  Arduino ->> Ultrasonic Sensor: What is the distance to the next Obstacle?
+  Ultrasonic Sensor ->> Arduino: It is 40cm 
+  Arduino ->> Command Client: Did i recieve a command?
+  Command Client ->> Arduino: No
+  Arduino -->> Arduino: The Status of keep driving is stop
+  Arduino -->> Stop Function: Call
+  Stop Function ->> Motors: Stop Both Motors
+  Arduino ->> Encoders: What speed is the buggy traveling at?
+  Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
+  Arduino -->> Arduino: What is the distance traveled. 40cm!
+  Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client.
+  Arduino ->> Buggy Speed Client: Send the current speed to the client.
+```
+Drive Function Sequence sequenceDiagram
+```mermaid
+sequenceDiagram
+  Drive Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Drive Function: No!
+  Drive Function ->> Motors: Both Motors go foward, at Nominal Value or PID speed based on driving command!
+```
+```mermaid
+sequenceDiagram
+  Drive Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Drive Function: Yes, the left one!
+  Drive Function ->> Motors: Rignt motor go foward at turning speed!
+```
+```mermaid
+sequenceDiagram
+  Drive Function ->> IR Sesors: Are either sensor on the white line?
+  IR Sesors ->> Drive Function: Yes, the Right one!
+  Drive Function ->> Motors: Left motor go foward at turning speed!
 ```
