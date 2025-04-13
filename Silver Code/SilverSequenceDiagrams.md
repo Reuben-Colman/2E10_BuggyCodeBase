@@ -54,7 +54,7 @@ sequenceDiagram
   Arduino -->> Stop Function: Call
   Stop Function ->> Motors: Stop Both Motors
   Arduino ->> Encoders: What speed is the buggy traveling at?
-  Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
+  Encoders ->> Arduino: The buggy is traveling at 0 cm/s!
   Arduino -->> Arduino: What is the distance traveled, 40cm.
   Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client.
   Arduino ->> Buggy Speed Client: Send the current speed to the client.
@@ -71,7 +71,7 @@ sequenceDiagram
   Arduino -->> Stop Function: The distance was less then 10cm, Call
   Stop Function ->> Motors: Stop Both Motors
   Arduino ->> Encoders: What speed is the buggy traveling at?
-  Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
+  Encoders ->> Arduino: The buggy is traveling at 0 cm/s!
   Arduino -->> Arduino: What is the distance traveled. 40cm!
   Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client .
   Arduino ->> Buggy Speed Client: Send the current speed to the client.
@@ -133,7 +133,7 @@ sequenceDiagram
   Arduino -->> Stop Function: Call
   Stop Function ->> Motors: Stop Both Motors
   Arduino ->> Encoders: What speed is the buggy traveling at?
-  Encoders ->> Arduino: The buggy is traveling at 4 cm/s!
+  Encoders ->> Arduino: The buggy is traveling at 0 cm/s!
   Arduino -->> Arduino: What is the distance traveled. 40cm!
   Arduino ->> Distance Traveled & Obsticle Client: Send the distance travel to the client.
   Arduino ->> Buggy Speed Client: Send the current speed to the client.
