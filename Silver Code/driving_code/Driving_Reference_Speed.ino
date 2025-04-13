@@ -14,9 +14,9 @@ void DriveReference() {
   LEYE_Status = digitalRead(LEYE); // Store current status of Left IR Sensor
   REYE_Status = digitalRead(REYE); // Store current status of Right IR Sensor
 
-  Serial.print("Ir Sesors( R / L): ");
-  Serial.print(REYE_Status);
-  Serial.println(LEYE_Status);
+  //Serial.print("Ir Sesors( R / L): ");
+  //Serial.print(REYE_Status);
+  //Serial.println(LEYE_Status);
 
   if (LEYE_Status == HIGH && REYE_Status == HIGH) { // If both IR Sensors detect black
     foward(speedRefNom); // call the forward function
