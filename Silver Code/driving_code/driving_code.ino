@@ -15,8 +15,8 @@ const uint32_t wifi_x[] = { // x displayed on led matrix while not connected to 
     0x90108204
 };
 
-char ssid[] = "VODAFONE-0784";       // WiFi Name
-char pass[] = "F9JPJMAADPDCXMHJ";  // WiFi password
+char ssid[] = "2E10_AP01";       // WiFi Name
+char pass[] = "LindaDoyle";  // WiFi password
 
 // Buggy Distance Traveled Variables
 double distance_traveled = 0; // global variable, distance traveled
