@@ -6,7 +6,7 @@ class NumberInput {
   ToggleSwitch switchRef;
   
   // Variable to store the last sent speed value
-  float lastSentSpeed = -1.0;
+  float lastSentSpeed = 0;
   
   NumberInput(float x, float y, float w, float h, ToggleSwitch sw) {
     this.x = x;

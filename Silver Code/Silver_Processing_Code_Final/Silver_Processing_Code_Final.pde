@@ -135,7 +135,7 @@ void ArduinoData(String data) {
   }
 }
 
-void mousePressed() {
+void mousePressed() {  
   if (resetDistanceBtn.isOver()) {
     distanceTraveled = 0.0;
     distance = 0;
